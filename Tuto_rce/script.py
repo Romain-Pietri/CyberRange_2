@@ -69,9 +69,9 @@ else:
     sys.exit(1)
 
 VM_CONNECTIONS = [
-    {"name": "Kali Blue 1", "hostname": TRUE_IP, "port": "3389", "protocol": "rdp", "username": "kaliuser", "password": "kali"},
-    {"name": "Kali Blue 2", "hostname": TRUE_IP, "port": "3390", "protocol": "rdp", "username": "kaliuser", "password": "kali"},
-    {"name": "Kali Blue 3", "hostname": TRUE_IP, "port": "3391", "protocol": "rdp", "username": "kaliuser", "password": "kali"}
+    {"name": "Kali Red 1", "hostname": TRUE_IP, "port": "3389", "protocol": "rdp", "username": "kaliuser", "password": "kali"},
+    {"name": "Kali Red 2", "hostname": TRUE_IP, "port": "3390", "protocol": "rdp", "username": "kaliuser", "password": "kali"},
+    {"name": "Kali Red 3", "hostname": TRUE_IP, "port": "3391", "protocol": "rdp", "username": "kaliuser", "password": "kali"}
 ]
 
 cursor.execute("DELETE FROM guacamole_connection_parameter;")

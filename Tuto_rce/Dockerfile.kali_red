@@ -49,6 +49,7 @@ RUN apt-get update && apt-get install -y \
     zsh \
     xrdp \
     kali-desktop-xfce \
+    dbus-x11 \
     nano \
     vim \
     unzip \
