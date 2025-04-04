@@ -11,6 +11,9 @@ print("Python version:", sys.version)
 # Liste uniquement les dossiers dans le répertoire courant
 files = [f for f in os.listdir(os.getcwd()) if os.path.isdir(f)]
 
+#supprime le dossier .git
+if ".git" in files:
+    files.remove(".git")
 print("Which Senario do you want to run?")
 #print la liste des fichiers dans le dossier list
 for i in range(len(files)):
