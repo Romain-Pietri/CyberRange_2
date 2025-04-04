@@ -1,0 +1,14 @@
+# Use a lightweight base image with PHP
+FROM php:7.4-apache
+
+# Copy the vulnerable PHP file to the web server's root directory
+COPY php/index.php /var/www/html/index.php
+
+# Set permissions for the web server
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Start the Apache server
+CMD ["apache2-foreground"]

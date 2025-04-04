@@ -1,0 +1,69 @@
+FROM kalilinux/kali-rolling
+
+LABEL maintainer="kali_blue"
+LABEL description="Kali Linux Blue Team"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Mise à jour et installation des outils Blue Team + bureau XFCE (officiel Kali) + XRDP
+RUN apt update && apt full-upgrade -y && \
+    apt install -y \
+        wget \
+        curl \
+        git \
+        unzip \
+        nano \
+        vim \
+        net-tools \
+        iputils-ping \
+        nmap \
+        metasploit-framework \
+        python3 \
+        python3-pip \
+        sudo \
+        zsh \
+        xrdp \
+        kali-desktop-xfce \
+        dbus-x11 \
+        wireshark \
+        tshark \
+        tcpdump \
+        ngrep \
+        netsniff-ng \
+        suricata \
+        fail2ban \
+        autopsy \
+        sleuthkit \
+        binwalk \
+        foremost \
+        theharvester \
+        spiderfoot \
+        maltego \
+        logwatch \
+        goaccess \
+        ansible \
+        python3-requests \
+        netcat-traditional \
+        mono-complete && \
+    apt clean
+
+# Installation de NetworkMiner
+RUN mkdir -p /opt && \
+    cd /opt && \
+    wget https://www.netresec.com/?download=NetworkMiner -O NetworkMiner.zip && \
+    unzip NetworkMiner.zip -d NetworkMiner
+
+# Création de l'utilisateur
+RUN useradd -m -s /bin/bash kaliuser && echo "kaliuser:kali" | chpasswd && adduser kaliuser sudo
+
+# Configurer XFCE comme environnement par défaut pour xrdp
+RUN echo "startxfce4" > /home/kaliuser/.xsession && \
+    chown kaliuser:kaliuser /home/kaliuser/.xsession
+
+# Activer les services XRDP
+RUN systemctl enable xrdp
+
+# Exposer le port RDP
+EXPOSE 3389
+
+CMD ["/bin/bash", "-c", "dbus-daemon --system & /usr/sbin/xrdp-sesman & /usr/sbin/xrdp && tail -f /dev/null"]

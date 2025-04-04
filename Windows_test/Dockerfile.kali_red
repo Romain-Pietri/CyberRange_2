@@ -1,0 +1,42 @@
+# Use the official Kali Linux base image
+FROM kalilinux/kali-rolling
+
+# Set environment variables to prevent interactive prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+# Update and install necessary packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    bzip2 \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    nmap \
+    masscan \
+    sudo \
+    dnsenum \
+    dnsrecon \
+    whois \
+    curl \
+    nikto \
+    metasploit-framework \
+    exploitdb \
+    smbclient \
+    hydra \
+    sqlmap \
+    mimikatz \
+    powershell \
+    tcpdump \
+    binwalk \
+    wireshark \
+    hashcat \
+    john \
+    && apt-get clean
+
+# Set working directory
+WORKDIR /workspace
+
+# Default command
+CMD ["/bin/bash"]

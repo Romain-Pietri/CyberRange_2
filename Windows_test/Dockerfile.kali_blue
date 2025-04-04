@@ -1,0 +1,43 @@
+FROM kalilinux/kali-rolling
+
+LABEL maintainer="kali_blue"
+LABEL description="Kali Linux Blue Team"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Mise à jour et installation des outils Blue Team + bureau XFCE (officiel Kali) + XRDP
+RUN apt update && apt full-upgrade -y && \
+    apt install -y \
+        wget \
+        curl \
+        git \
+        unzip \
+        nano \
+        vim \
+        net-tools \
+        iputils-ping \
+        nmap \
+        metasploit-framework \
+        python3 \
+        python3-pip \
+        sudo \
+        zsh \
+        xrdp \
+        kali-desktop-xfce \
+        dbus-x11 \
+    && apt clean
+
+# Création de l'utilisateur
+RUN useradd -m -s /bin/bash kaliuser && echo "kaliuser:kali" | chpasswd && adduser kaliuser sudo
+
+# Configurer XFCE comme environnement par défaut pour xrdp
+RUN echo "startxfce4" > /home/kaliuser/.xsession && \
+    chown kaliuser:kaliuser /home/kaliuser/.xsession
+
+# Activer les services XRDP
+RUN systemctl enable xrdp
+
+# Exposer le port RDP
+EXPOSE 3389
+
+CMD ["/bin/bash", "-c", "dbus-daemon --system & /usr/sbin/xrdp-sesman & /usr/sbin/xrdp && tail -f /dev/null"]
