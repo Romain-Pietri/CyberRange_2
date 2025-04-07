@@ -1,0 +1,31 @@
+FROM ubuntu:22.04
+
+# Mise à jour + outils réseau + SSH + sudo
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    net-tools \
+    iproute2 \
+    iptables \
+    procps \
+    sudo \
+    iputils-ping \
+    && mkdir /var/run/sshd
+
+# Création d'un utilisateur root avec un mot de passe simple
+RUN echo "root:toor" | chpasswd
+
+# Autoriser la connexion root par SSH
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Activer la journalisation SSH plus détaillée
+RUN echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
+
+# Copie du script d'entrypoint
+COPY entrypoint.py /entrypoint.py
+RUN chmod +x /entrypoint.py
+
+# Exposer le port SSH
+EXPOSE 22
+
+# Démarrage
+ENTRYPOINT ["/entrypoint.py"]

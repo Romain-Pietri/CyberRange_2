@@ -1,0 +1,89 @@
+services:
+  ssh-server:
+    build: ./ssh_server
+    container_name: ssh_server
+    privileged: true
+    ports:
+      - "2222:22"
+    networks:
+      - labnet
+
+  attacker:
+    build: ./attacker
+    container_name: attacker
+    depends_on:
+      - ssh-server
+    networks:
+      - labnet
+
+  kali_blue1:
+    build:
+      context: .
+      dockerfile: Dockerfile.kali_blue
+    container_name: kali-blue1
+    ports:
+      - "3392:3389"
+    networks:
+      - labnet
+    privileged: true
+
+  kali_blue2:
+    build:
+      context: .
+      dockerfile: Dockerfile.kali_blue
+    container_name: kali-blue2
+    ports:
+      - "3393:3389"
+    networks:
+      - labnet
+    privileged: true
+
+  kali_blue3:
+    build:
+      context: .
+      dockerfile: Dockerfile.kali_blue
+    container_name: kali-blue3
+    ports:
+      - "3394:3389"
+    networks:
+      - labnet
+    privileged: true
+
+  postgres:
+    image: postgres:13
+    container_name: guac-db
+    environment:
+      POSTGRES_DB: guacamole_db
+      POSTGRES_USER: guacamole_user
+      POSTGRES_PASSWORD: ChooseYourOwnPasswordHere1234
+    ports:
+      - "5432:5432"
+    networks:
+      - labnet
+
+  guacd:
+    image: guacamole/guacd
+    container_name: guacd
+    networks:
+      - labnet
+
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guacamole
+    depends_on:
+      - guacd
+      - postgres
+    environment:
+      GUACD_HOSTNAME: guacd
+      POSTGRES_HOSTNAME: guac-db
+      POSTGRES_DATABASE: guacamole_db
+      POSTGRES_USER: guacamole_user
+      POSTGRES_PASSWORD: ChooseYourOwnPasswordHere1234
+    ports:
+      - "8080:8080"
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge
