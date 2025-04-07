@@ -43,7 +43,7 @@ RUN apt update && apt full-upgrade -y && \
         goaccess \
         ansible \
         python3-requests \
-        netcat-traditional \
+        netcat-traditional \
         mono-complete && \
     apt clean
 
@@ -66,4 +66,4 @@ RUN systemctl enable xrdp
 # Exposer le port RDP
 EXPOSE 3389
 
-CMD ["/bin/bash", "-c", "dbus-daemon --system & /usr/sbin/xrdp-sesman & /usr/sbin/xrdp && tail -f /dev/null"]
+CMD ["/bin/bash", "-c", "service dbus start && service xrdp start && tail -f /dev/null"]

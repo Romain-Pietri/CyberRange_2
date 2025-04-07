@@ -1,74 +1,88 @@
-# Use the official Kali Linux base image
 FROM kalilinux/kali-rolling
 
-# Set environment variables to prevent interactive prompts during installation
+LABEL maintainer="kali_red"
+LABEL description="Kali Linux RED Team"
+
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL maintainer="kali_red"
-LABEL description="Kali Linux Red Team"
-
-
-
-# Update and install necessary packages
-RUN apt-get update && apt-get install -y \
-    wget \
-    bzip2 \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    python3-dev \
-    nmap \
-    gobuster \
-    dirb \
-    masscan \
-    sudo \
-    dnsenum \
-    dnsrecon \
-    whois \
-    curl \
-    nikto \
-    metasploit-framework \
-    exploitdb \
-    smbclient \
-    hydra \
-    sqlmap \
-    mimikatz \
-    powershell \
-    tcpdump \
-    binwalk \
-    wireshark \
-    hashcat \
-    john \
-    hydra \
-    aircrack-ng \
-    net-tools \
-    netcat-traditional \
-    python3 \
-    python3-pip \
-    sudo \
-    zsh \
-    xrdp \
-    kali-desktop-xfce \
-    dbus-x11 \
-    nano \
-    vim \
-    unzip \
-    git \    
-    && apt-get clean
-
-COPY /scenario/Readme.txt /home/kaliuser/desktop/README.txt
+# Mise à jour et installation des outils RED Team + XFCE + XRDP
+RUN apt update && apt full-upgrade -y && \
+    apt install -y \
+        wget \
+        curl \
+        git \
+        unzip \
+        nano \
+        vim \
+        net-tools \
+        iputils-ping \
+        nmap \
+        metasploit-framework \
+        python3 \
+        python3-pip \
+        sudo \
+        zsh \
+        xrdp \
+        xorgxrdp \
+        kali-desktop-xfce \
+        dbus-x11 \
+        wireshark \
+        tshark \
+        tcpdump \
+        ngrep \
+        netsniff-ng \
+        suricata \
+        fail2ban \
+        autopsy \
+        sleuthkit \
+        binwalk \
+        foremost \
+        theharvester \
+        spiderfoot \
+        maltego \
+        logwatch \
+        goaccess \
+        ansible \
+        python3-requests \
+        netcat-traditional \
+        mono-complete \
+        gobuster \
+        dirb \
+        masscan \
+        dnsenum \
+        dnsrecon \
+        whois \
+        nikto \
+        smbclient \
+        hydra \
+        sqlmap \
+        mimikatz \
+        powershell \
+        john \
+        hashcat \
+        build-essential \
+        libssl-dev \
+        libffi-dev \
+        python3-dev \
+        bzip2 && \
+    apt clean
 
 # Création de l'utilisateur
 RUN useradd -m -s /bin/bash kaliuser && echo "kaliuser:kali" | chpasswd && adduser kaliuser sudo
 
-# Configurer XFCE comme environnement par défaut pour xrdp
+# Configuration de l'environnement XRDP avec XFCE
 RUN echo "startxfce4" > /home/kaliuser/.xsession && \
     chown kaliuser:kaliuser /home/kaliuser/.xsession
 
-# Activer les services XRDP
+# Activation XRDP
 RUN systemctl enable xrdp
 
-# Exposer le port RDP
+# Copie d’un scénario si besoin
+COPY ./scenario/ /home/kaliuser/Desktop/scenario/
+RUN chown -R kaliuser:kaliuser /home/kaliuser/Desktop/scenario/
+
+# Exposition du port RDP
 EXPOSE 3389
 
-CMD ["/bin/bash", "-c", "dbus-daemon --system & /usr/sbin/xrdp-sesman & /usr/sbin/xrdp && tail -f /dev/null"]
+# Lancement des services avec dbus et XRDP
+CMD ["/bin/bash", "-c", "service dbus start && service xrdp start && tail -f /dev/null"]
