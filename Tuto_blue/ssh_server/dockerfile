@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 # Mise à jour + outils réseau + SSH + sudo
 RUN apt-get update && apt-get install -y \
     openssh-server \
+    syslog-ng \
     net-tools \
     iproute2 \
     iptables \
@@ -18,14 +19,18 @@ RUN echo "root:toor" | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # Activer la journalisation SSH plus détaillée
-RUN echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
+RUN echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config && \
+    sed -i 's/#SyslogFacility AUTH/SyslogFacility AUTH/' /etc/ssh/sshd_config
 
-# Copie du script d'entrypoint
-COPY entrypoint.py /entrypoint.py
-RUN chmod +x /entrypoint.py
+# Configurer syslog-ng pour capturer les logs SSH
+RUN echo '@version: 3.13' > /etc/syslog-ng/syslog-ng.conf && \
+    echo 'source s_local { system(); internal(); };' >> /etc/syslog-ng/syslog-ng.conf && \
+    echo 'destination d_auth { file("/var/log/auth.log"); };' >> /etc/syslog-ng/syslog-ng.conf && \
+    echo 'filter f_auth { facility(auth, authpriv); };' >> /etc/syslog-ng/syslog-ng.conf && \
+    echo 'log { source(s_local); filter(f_auth); destination(d_auth); };' >> /etc/syslog-ng/syslog-ng.conf
 
 # Exposer le port SSH
 EXPOSE 22
 
-# Démarrage
-ENTRYPOINT ["/entrypoint.py"]
+# Commande pour démarrer syslog-ng et sshd
+CMD syslog-ng && /usr/sbin/sshd -D
