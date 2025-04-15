@@ -102,24 +102,21 @@ exports.startScenario = (req, res) => {
             stderr,
         });
     }
+
+    // Si stderr contient des messages, les afficher sans les traiter comme une erreur critique
     if (stderr) {
-        console.error(`Erreur : ${stderr}`);
-        console.error(`Sortie standard (stdout) : ${stdout}`);
-        // Réinitialiser le fichier isrunning en cas d'erreur
-        fs.writeFileSync(isRunningFilePath, '0', 'utf-8');
-        return res.status(500).json({
-            message: 'Erreur lors de l\'exécution du scénario.',
-            stdout,
-            stderr,
-        });
+        console.warn(`Avertissement ou message dans stderr : ${stderr}`);
     }
 
-    console.log(`Sortie : ${stdout}`);
-    // Mettre à jour le scénario en cours d'exécution
-    runningScenario = scenario;
-    res.json({ message: `Scénario "${scenario}" démarré avec succès.`, stdout });
-
-  });
+    // Traitez stdout normalement
+    console.log(`Sortie standard (stdout) : ${stdout}`);
+    fs.writeFileSync(isRunningFilePath, '0', 'utf-8');
+    return res.status(200).json({
+        message: 'Scénario exécuté avec succès.',
+        stdout,
+        stderr,
+    });
+});
 };
 
 // Arrêter un scénario
