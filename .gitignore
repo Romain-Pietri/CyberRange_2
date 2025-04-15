@@ -2,4 +2,9 @@ Windows_test/windows.iso
 Windows_test/win7.qcow2
 Windows_test/virtio.iso
 
+Web/backend/node_modules
+Web/backend/package-lock.json
+
+Web/frontend/package-lock.json
+Web/frontend/node_modules
 
