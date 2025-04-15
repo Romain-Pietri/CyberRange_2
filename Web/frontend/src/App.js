@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Menu from './Menu';
+import GestionVM from './GestionVM';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,13 +16,19 @@ const App = () => {
     };
 
     return (
-        <div>
-            {isAuthenticated ? (
-                <Menu onLogout={handleLogout} />
-            ) : (
-                <Login onLogin={handleLogin} />
-            )}
-        </div>
+        <Router>
+            <Routes>
+                {!isAuthenticated ? (
+                    <Route path="*" element={<Login onLogin={handleLogin} />} />
+                ) : (
+                    <>
+                        <Route path="/" element={<Menu onLogout={handleLogout} />} />
+                        <Route path="/gestion-vm" element={<GestionVM />} />
+                        {/* Ajoutez d'autres routes ici si nécessaire */}
+                    </>
+                )}
+            </Routes>
+        </Router>
     );
 };
 

@@ -6,11 +6,13 @@ import pymysql
 import requests
 import re
 
+
 # Votre IP de référence
-#TRUE_IP = "10.222.3.255"
+TRUE_IP = "192.168.1.152"
 
 try :
-    TRUE_IP = subprocess.run("hostname -I", shell=True, capture_output=True, text=True).stdout.split()[0]
+    #TRUE_IP = subprocess.run("hostname -I", shell=True, capture_output=True, text=True).stdout.split()[0]
+    
     print(TRUE_IP)
 except Exception as e:
     print(f"Erreur lors de la récupération de l'adresse IP : {e}")
@@ -24,24 +26,42 @@ except Exception as e:
 def install_package(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
+
 try:
     install_package("pg8000")
     install_package("pymysql")
     install_package("requests")
 except Exception as e:
     print(f"Erreur lors de l'installation des packages : {e}")
-    sys.exit(1)
+    #sys.exit(1)
 
 def run(cmd):
     subprocess.run(cmd, shell=True, check=True)
 
 # ---------------------- Démarrage des conteneurs ----------------------
+import os
+# Vérifier si un argument a été passé pour le chemin du fichier docker-compose.yml
+if len(sys.argv) < 2:
+    print("Usage : python script.py <chemin-vers-docker-compose.yml>")
+    sys.exit(1)
 
+docker_compose_dir = sys.argv[1]
+
+# Vérifier si le fichier docker-compose.yml existe dans le répertoire spécifié
+if not os.path.exists(os.path.join(docker_compose_dir, "docker-compose.yml")):
+    print(f"Erreur : Aucun fichier docker-compose.yml trouvé dans {docker_compose_dir}")
+    sys.exit(1)
+print(f"[+] docker-compose.yml trouvé dans {docker_compose_dir}")
 print("[+] Lancement des conteneurs...")
-run("docker-compose down")
-run("docker-compose build")
-run("docker-compose up -d")
-
+try :
+    
+    os.chdir(docker_compose_dir)  # Changer le répertoire de travail
+    run("docker-compose down")
+    run("docker-compose build")
+    run("docker-compose up -d")
+except Exception as e:
+    print(f"Erreur lors du démarrage des conteneurs : {e}")
+    sys.exit(1)
 # ---------------------- Configuration de Guacamole ----------------------
 
 print("[+] Configuration de Guacamole...")
@@ -110,12 +130,3 @@ conn.close()
 print("[+] Guacamole configuré avec succès ! Accès : http://localhost:8080/guacamole")
 
 print("[+] Scénario tutoriel kali red Prêt !")
-# ---------------------- Attente infinie ----------------------
-
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("[+] Arrêt des conteneurs en cours...")
-    run("docker-compose down")
-    print("[+] Conteneurs arrêtés.")
