@@ -14,6 +14,7 @@ try:
 except Exception as e:
     print(f"[-] Erreur lors de la récupération de l'adresse IP : {e}")
     print("Veuillez spécifier l'adresse IP manuellement dans le script.")
+    exit(1)
 
 # ---------------------- Installations Python ----------------------
 
@@ -32,12 +33,29 @@ def run(cmd):
     subprocess.run(cmd, shell=True, check=True)
 
 # ---------------------- Démarrage des conteneurs ----------------------
+import os
+# Vérifier si un argument a été passé pour le chemin du fichier docker-compose.yml
+if len(sys.argv) < 2:
+    print("Usage : python script.py <chemin-vers-docker-compose.yml>")
+    sys.exit(1)
 
+docker_compose_dir = sys.argv[1]
+
+# Vérifier si le fichier docker-compose.yml existe dans le répertoire spécifié
+if not os.path.exists(os.path.join(docker_compose_dir, "docker-compose.yml")):
+    print(f"Erreur : Aucun fichier docker-compose.yml trouvé dans {docker_compose_dir}")
+    sys.exit(1)
+print(f"[+] docker-compose.yml trouvé dans {docker_compose_dir}")
 print("[+] Lancement des conteneurs...")
-run("docker-compose down")
-run("docker-compose build")
-run("docker-compose up -d")
-
+try :
+    
+    os.chdir(docker_compose_dir)  # Changer le répertoire de travail
+    run("docker-compose down")
+    run("docker-compose build")
+    run("docker-compose up -d")
+except Exception as e:
+    print(f"Erreur lors du démarrage des conteneurs : {e}")
+    sys.exit(1)
 
 
 # ---------------------- Lancement de l'attaque ----------------------
@@ -141,11 +159,3 @@ print("[+] Guacamole configuré avec succès ! Accès : http://localhost:8080/gu
 print("[+] Scénario tutoriel blue team prêt !")
 
 # ---------------------- Attente infinie ----------------------
-
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("[+] Arrêt des conteneurs en cours...")
-    run("docker-compose down")
-    print("[+] Conteneurs arrêtés.")
