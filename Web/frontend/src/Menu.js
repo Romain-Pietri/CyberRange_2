@@ -25,7 +25,7 @@ const Menu = ({ onLogout }) => {
             <h1>Menu Principal</h1>
             <div className="menu-buttons">
                 <button onClick={() => navigate('/gestion-vm')}>Gestion Machines Virtuelles</button>
-                <button onClick={() => alert('Option 2 sélectionnée')}>Gestion Scénario</button>
+                <button onClick={() => navigate('/modifier-vm')}>Modifier / Supprimer Scénarios</button>
             </div>
             <button className="logout-button" onClick={handleLogout}>
                 Déconnexion

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Menu from './Menu';
 import GestionVM from './GestionVM';
+import ModifierVM from './ModifierVM';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,6 +25,7 @@ const App = () => {
                     <>
                         <Route path="/" element={<Menu onLogout={handleLogout} />} />
                         <Route path="/gestion-vm" element={<GestionVM />} />
+                        <Route path="/modifier-vm" element={<ModifierVM />} />
                         {/* Ajoutez d'autres routes ici si nécessaire */}
                     </>
                 )}
