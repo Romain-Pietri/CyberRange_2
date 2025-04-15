@@ -22,8 +22,8 @@ const Menu = ({ onLogout }) => {
         <div className="menu-container">
             <h1>Menu Principal</h1>
             <div className="menu-buttons">
-                <button onClick={() => alert('Option 1 sélectionnée')}>Option 1</button>
-                <button onClick={() => alert('Option 2 sélectionnée')}>Option 2</button>
+                <button onClick={() => alert('Option 1 sélectionnée')}>Gestion Machine Virtuelles</button>
+                <button onClick={() => alert('Option 2 sélectionnée')}>Gestion Scénario</button>
             </div>
             <button className="logout-button" onClick={handleLogout}>
                 Déconnexion
