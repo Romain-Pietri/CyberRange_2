@@ -54,7 +54,7 @@ exports.createScenario = (req, res) => {
         fs.writeFileSync(isRunningPath, '0', 'utf-8'); // 0 signifie que le scénario n'est pas en cours d'exécution
 
         // Copier le contenu du répertoire model dans le répertoire du scénario
-        const modelDir = path.join(__dirname, '/model');
+        const modelDir = path.join(__dirname, '/init_model/');
         copyFolderRecursiveSync(modelDir, scenariosDir);
 
         return res.status(201).json({ message: 'Scénario créé avec succès.' });
@@ -90,6 +90,7 @@ exports.get_scenarios = (req, res) => {
         const dockerComposeContent = fs.readFileSync(dockerComposePath, 'utf-8');
         const dockerComposeJson = yaml.parse(dockerComposeContent); // Utilisation de yaml.parse
         console.log("dockerComposeJson", dockerComposeJson);
+        //supprime les machine de base (guacamole,postgres,guacd) 
 
         return res.status(200).json({ scenarioName, dockerComposeJson });
     } catch (error) {
@@ -97,3 +98,179 @@ exports.get_scenarios = (req, res) => {
         return res.status(500).json({ message: 'Erreur lors du parsing du fichier YAML.' });
     }
 };
+
+exports.updateScenario = (req, res) => {
+    const { scenarioName, NbRed, NbBlue, BoolSiem,dockerComposeJson} = req.body;
+    
+     // Vérification des champs requis
+     //if (!scenarioName || NbRed === undefined || NbBlue === undefined || BoolSiem === undefined || !dockerComposeJson) {
+     //   return res.status(400).json({ message: 'Tous les champs (scenarioName, NbRed, NbBlue, BoolSiem, config_yml) sont requis.' });
+    //}
+
+    console.log("Données reçues :");
+    console.log("scenarioName :", scenarioName);
+    console.log("NbRed :", NbRed);
+    console.log("NbBlue :", NbBlue);
+    console.log("BoolSiem :", BoolSiem);
+    //console.log("dockerComposeJson :", dockerComposeJson);
+
+    // Vérifier si le scénario existe
+    
+   
+    const scenariosDir = path.join(__dirname, '../../../../');
+
+    // Vérifier si le répertoire du scénario existe
+    if (!fs.existsSync(scenariosDir)) {
+        return res.status(404).json({ message: 'Le scénario n\'existe pas.' });
+    }
+
+    if(!scenarioName) {
+        return res.status(400).json({ message: 'Tous les champs sont requis.' });
+    }
+    const scenarioPath = path.join(scenariosDir, scenarioName);
+
+    // Vérifier si le répertoire du scénario existe
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({ message: 'Le scénario n\'existe pas.' });
+    }
+
+    //lire le contenu de la variable config_yml
+    //Met le bon nombre de machine Kali 
+
+    //recherche dans dockerComposeJson le nombre de machine kali_blue
+    let countBlue = 0;
+    let countRed = 0;
+
+    for (const serviceName in dockerComposeJson.services) {
+        if (serviceName.startsWith('kali_blue')) {
+            countBlue++;
+        } else if (serviceName.startsWith('kali_red')) {
+            countRed++;
+        }
+    }
+    console.log("countBlue", countBlue);
+    console.log("countRed", countRed);
+    //s'il y a plus de machine que demandé on les supprime
+    if (countBlue > NbBlue) {
+        for (let i = countBlue; i > NbBlue; i--) {
+            delete dockerComposeJson.services[`kali_blue${i}`];
+        }
+    } else if (countBlue < NbBlue) {
+        for (let i = countBlue + 1; i <= NbBlue; i++) {
+            dockerComposeJson.services[`kali_blue${i}`] = {
+                dockerfile: 'Dockerfile.kali_blue',
+                container_name: `kali_blue_${i}`,
+                ports: [`${3389 + i}:3389`],
+                privileged: true,
+                networks: [
+                    "guacnetwork_compose",
+                    "vulnerable_network"
+                ]
+
+            };
+        }
+    }
+    //s'il y a plus de machine que demandé on les supprime
+    if (countRed > NbRed) {
+        for (let i = countRed; i > NbRed; i--) {
+            delete dockerComposeJson.services[`kali_red${i}`];
+            console.log("delete kali_red", i);
+        }
+    } else if (countRed < NbRed) {
+        for (let i = countRed + 1; i <= NbRed; i++) {
+            dockerComposeJson.services[`kali_red${i}`] = {
+                dockerfile: 'Dockerfile.kali_red',
+                container_name: `kali_red_${i}`,
+                ports: [`${3389 + i}:3389`],
+                privileged: true,
+                networks: {
+                    guacnetwork_compose: {},
+                    vulnerable_network: {}
+                }
+
+            };
+        }
+    }
+    let siemJson={}
+    try {
+        const siemData = fs.readFileSync(path.join(__dirname, '/other_model/Siem.yml'), 'utf-8');
+        siemJson = yaml.parse(siemData);
+        console.log("siemJson", siemJson);
+    } catch (err) {
+        console.error('Erreur lors de la lecture du fichier Siem.yml :', err);
+        return res.status(500).json({ message: 'Erreur lors de la lecture du fichier Siem.yml.' });
+    }
+    
+    //console.log("dockerComposeJson", dockerComposeJson);
+    //On vérifie si BoolSiem est vrai ou faux
+    //Si c'est vrai on ajoute siemJson au dockerComposeJson
+    //Sinon on le supprime
+
+    if (BoolSiem) {
+        //fait une comparaison entre le dockerComposeJson et le siemJson
+        //s'il n'est pas présent on l'ajoute
+        // Ajoute les services de siemJson.services au dockerComposeJson.services
+        console.log("siemJson.services", siemJson.services);
+        Object.entries(siemJson.services).forEach(([key, value]) => {
+            if (!dockerComposeJson.services[key]) {
+                dockerComposeJson.services[key] = value;
+            }
+        });
+        // Vérifie si dockerComposeJson.volumes existe, sinon l'initialise
+        if (!dockerComposeJson.volumes) {
+            dockerComposeJson.volumes = {};
+        }
+
+        // Ajoute le volume siem au dockerComposeJson
+        dockerComposeJson.volumes.ssh_logs = siemJson.volumes.ssh_logs;
+        
+        //Ajoute le fichier filebeat.yml au dossier du scénario
+        const filebeatPath = path.join(scenarioPath, 'filebeat.yml');
+        if (!fs.existsSync(filebeatPath)) {
+            fs.copyFileSync(path.join(__dirname, '/other_model/filebeat.yml'), filebeatPath);
+        }
+        //ajoute le fichier Dockerfile.filebeat au dossier du scénario
+        const dockerfilePath = path.join(scenarioPath, 'Dockerfile.filebeat');
+        if (!fs.existsSync(dockerfilePath)) {
+            fs.copyFileSync(path.join(__dirname, '/other_model/Dockerfile.filebeat'), dockerfilePath);
+        }
+
+
+    }
+    else{
+        //supprime le service siem du dockerComposeJson
+        // Supprime le service siem du dockerComposeJson
+        Object.entries(siemJson.services).forEach(([key, value]) => {
+            if (dockerComposeJson.services[key]) {
+                delete dockerComposeJson.services[key];
+            }
+        });
+        //supprime le volume siem du dockerComposeJson
+        if (dockerComposeJson.volumes && dockerComposeJson.volumes.ssh_logs) {
+            delete dockerComposeJson.volumes.ssh_logs;
+        }
+        //supprime le fichier filebeat.yml du dossier du scénario
+        const filebeatPath = path.join(scenarioPath, 'filebeat.yml');
+        if (fs.existsSync(filebeatPath)) {
+            fs.unlinkSync(filebeatPath);
+        }
+        //supprime le fichier Dockerfile.filebeat du dossier du scénario
+        const dockerfilePath = path.join(scenarioPath, 'Dockerfile.filebeat');
+        if (fs.existsSync(dockerfilePath)) {
+            fs.unlinkSync(dockerfilePath);
+        }
+
+    }
+    
+    // Mettre à jour le fichier docker-compose.yml
+    console.log("dockerComposeJson", dockerComposeJson);
+    const dockerComposePath = path.join(scenarioPath, 'docker-compose2.yml');
+    try {
+        const yamlString = yaml.stringify(dockerComposeJson, { indent: 4 });
+        fs.writeFileSync(dockerComposePath, yamlString, 'utf-8');
+    } catch (error) {
+        console.error('Erreur lors de l\'écriture du fichier YAML :', error);
+        return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier YAML.' });
+    }
+    res.status(200).json({ message: 'Scénario mis à jour avec succès.' });
+}
