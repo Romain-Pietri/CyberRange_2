@@ -1,0 +1,88 @@
+FROM kalilinux/kali-rolling
+
+LABEL maintainer="kali_red"
+LABEL description="Kali Linux RED Team"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Mise à jour et installation des outils RED Team + XFCE + XRDP
+RUN apt update && apt full-upgrade -y && \
+    apt install -y \
+        wget \
+        curl \
+        git \
+        unzip \
+        nano \
+        vim \
+        net-tools \
+        iputils-ping \
+        nmap \
+        metasploit-framework \
+        python3 \
+        python3-pip \
+        sudo \
+        zsh \
+        xrdp \
+        xorgxrdp \
+        kali-desktop-xfce \
+        dbus-x11 \
+        wireshark \
+        tshark \
+        tcpdump \
+        ngrep \
+        netsniff-ng \
+        suricata \
+        fail2ban \
+        autopsy \
+        sleuthkit \
+        binwalk \
+        foremost \
+        theharvester \
+        spiderfoot \
+        maltego \
+        logwatch \
+        goaccess \
+        ansible \
+        python3-requests \
+        netcat-traditional \
+        mono-complete \
+        gobuster \
+        dirb \
+        masscan \
+        dnsenum \
+        dnsrecon \
+        whois \
+        nikto \
+        smbclient \
+        hydra \
+        sqlmap \
+        mimikatz \
+        powershell \
+        john \
+        hashcat \
+        build-essential \
+        libssl-dev \
+        libffi-dev \
+        python3-dev \
+        bzip2 && \
+    apt clean
+
+# Création de l'utilisateur
+RUN useradd -m -s /bin/bash kaliuser && echo "kaliuser:kali" | chpasswd && adduser kaliuser sudo
+
+# Configuration de l'environnement XRDP avec XFCE
+RUN echo "startxfce4" > /home/kaliuser/.xsession && \
+    chown kaliuser:kaliuser /home/kaliuser/.xsession
+
+# Activation XRDP
+RUN systemctl enable xrdp
+
+# Copie d’un scénario si besoin
+COPY ./scenario/ /home/kaliuser/Desktop/scenario/
+RUN chown -R kaliuser:kaliuser /home/kaliuser/Desktop/scenario/
+
+# Exposition du port RDP
+EXPOSE 3389
+
+# Lancement des services avec dbus et XRDP
+CMD ["/bin/bash", "-c", "service dbus start && service xrdp start && tail -f /dev/null"]
