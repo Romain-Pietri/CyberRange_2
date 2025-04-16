@@ -87,6 +87,14 @@ const ModifierVM = () => {
                     ))}
                 </ul>
             </div>
+            <button
+                className="add-button"
+                onClick={() => alert('Ajouter un scénario (fonction non implémentée)')}
+                disabled={loading}
+            >
+                Ajouter un Scénario
+            </button>
+            
         </div>
     );
 };
