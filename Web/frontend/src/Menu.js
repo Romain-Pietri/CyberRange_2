@@ -5,12 +5,11 @@ import './styles/Menu.css';
 
 const Menu = ({ onLogout }) => {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false); // Ajout de l'état loading
-    const [showAddModal, setShowAddModal] = useState(false); // Ajout de l'état pour la modal
-    const [newScenarioName, setNewScenarioName] = useState(''); // Ajout de l'état pour le nom du scénario
+    const [loading, setLoading] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [newScenarioName, setNewScenarioName] = useState('');
 
     useEffect(() => {
-        // Vérifie si le token existe
         const token = getSessionCookie('session_token');
         if (!token) {
             alert('Session expirée ou invalide. Veuillez vous reconnecter.');
@@ -43,6 +42,7 @@ const Menu = ({ onLogout }) => {
                 alert(data.message);
                 setShowAddModal(false);
                 setNewScenarioName('');
+                navigate('/creation-vm'); // Redirection vers la page CreationVM
             } else {
                 alert(data.message || 'Erreur lors de l\'ajout du scénario.');
             }

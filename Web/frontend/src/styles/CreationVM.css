@@ -1,0 +1,235 @@
+/* Fond global */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #e0e0e0; /* gris clair */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-left: 400px; 
+  box-sizing: border-box;
+
+  
+}
+
+#reseau {
+  color: white;
+}
+
+#machine {
+  color: white;
+}
+
+/* Barre du haut */
+.top-bar {
+  color: white;
+  font-weight: bold;
+  background-color: #333;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Icône hamburger */
+.menu-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Groupe dans la top bar */
+.top-bar .form-group {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Labels et inputs dans top-bar */
+.top-bar label {
+  color: white;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.top-bar input[type="number"],
+.top-bar input[type="checkbox"] {
+  background-color: #444;
+  border: 1px solid #777;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+/* Titre aligné à droite */
+.title {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-left: 8in;
+}
+
+/* Conteneur principal */
+.creation-container {
+  position: absolute;
+  top: 80px; /* hauteur de la top-bar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  padding-left: 350px;
+  padding-top: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-content: flex-start;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.buttons-container {
+position: fixed;
+bottom: 20px;
+right: 20px;
+display: flex;
+gap: 10px;
+z-index: 5;
+}
+
+/* Bouton d'ajout */
+.add-btn {
+  background-color: #00b4d8;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #0077b6;
+}
+
+/* Icônes des machines */
+.machine-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 120px;
+  height: 120px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.machine-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Nom de la machine sous l'icône */
+.machine-name {
+  font-size: 0.8rem;
+  margin-top: 8px;
+  color: #333;
+  text-align: center;
+}
+
+/* Réseaux */
+.network-grid {
+  position: absolute;
+  bottom: 150px;
+  left: 350px;
+  right: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  align-content: flex-start;
+}
+
+.network-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+  width: 120px;
+  height: 120px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.network-name {
+  font-size: 0.8rem;
+  margin-top: 8px;
+  color: #333;
+}
+
+/* Menu latéral */
+.side-menu {
+  margin-top: 100px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.side-menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.side-menu input {
+  background-color: #444;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #777;
+}
+
+.side-menu select {
+  background-color: #444;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #777;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}

@@ -4,6 +4,7 @@ import Login from './Login';
 import Menu from './Menu';
 import GestionVM from './GestionVM';
 import ModifierVM from './ModifierVM';
+import CreationVM from './CreationVM';
 import CyberForge from './CyberForge';
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
                         <Route path="/" element={<Menu onLogout={handleLogout} />} />
                         <Route path="/gestion-vm" element={<GestionVM />} />
                         <Route path="/modifier-vm" element={<ModifierVM />} />
+                        <Route path="/creation-vm" element={<CreationVM />} />
                         <Route path="/cyberForge" element={<CyberForge />} />
                         {/* Ajoutez d'autres routes ici si nécessaire */}
                     </>
