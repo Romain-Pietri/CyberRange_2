@@ -27,7 +27,7 @@ const App = () => {
                         <Route path="/" element={<Menu onLogout={handleLogout} />} />
                         <Route path="/gestion-vm" element={<GestionVM />} />
                         <Route path="/modifier-vm" element={<ModifierVM />} />
-                        <Route path="/cyber-forge" element={<CyberForge />} />
+                        <Route path="/cyberForge" element={<CyberForge />} />
                         {/* Ajoutez d'autres routes ici si nécessaire */}
                     </>
                 )}
