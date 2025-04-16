@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSessionCookie, deleteSessionCookie } from './utils/auth';
 import './styles/Menu.css';
 
 const Menu = ({ onLogout }) => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false); // Ajout de l'état loading
+    const [showAddModal, setShowAddModal] = useState(false); // Ajout de l'état pour la modal
+    const [newScenarioName, setNewScenarioName] = useState(''); // Ajout de l'état pour le nom du scénario
 
     useEffect(() => {
         // Vérifie si le token existe
@@ -18,6 +21,36 @@ const Menu = ({ onLogout }) => {
     const handleLogout = () => {
         deleteSessionCookie('session_token');
         onLogout();
+    };
+
+    const addScenario = async () => {
+        if (!newScenarioName.trim()) {
+            alert('Le nom du scénario ne peut pas être vide.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/cyberforge/create-scenario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ scenarioName: newScenarioName }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                setShowAddModal(false);
+                setNewScenarioName('');
+            } else {
+                alert(data.message || 'Erreur lors de l\'ajout du scénario.');
+            }
+        } catch (err) {
+            alert('Erreur réseau.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
