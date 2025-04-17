@@ -274,3 +274,54 @@ exports.updateScenario = (req, res) => {
     }
     res.status(200).json({ message: 'Scénario mis à jour avec succès.' });
 }
+exports.uploadFile = (req, res) => {
+    const { scenarioName, file, pathFile, nameFile } = req.body;
+
+    console.log("scenarioName", scenarioName);
+    console.log("dockerfile", file);
+    console.log("path", pathFile);
+    console.log("nameFile", nameFile);
+
+    // Vérification des champs requis
+    if (!scenarioName || !file || !pathFile || !nameFile) {
+        return res.status(400).json({ message: 'Tous les champs (scenarioName, file, pathFile, nameFile) sont requis.' });
+    }
+
+    // Vérifier si le scénario existe
+    const scenariosDir = path.join(__dirname, '../../../../');
+    if (!fs.existsSync(scenariosDir)) {
+        return res.status(404).json({ message: 'Le répertoire des scénarios n\'existe pas.' });
+    }
+
+    const scenarioPath = path.join(scenariosDir, scenarioName);
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({ message: 'Le scénario spécifié n\'existe pas.' });
+    }
+
+    // S'assurer que pathFile se termine par un "/"
+    const normalizedPathFile = pathFile.endsWith('/') ? pathFile : `${pathFile}/`;
+
+    // Construire le chemin complet du répertoire
+    const fullPath = path.join(scenarioPath, normalizedPathFile);
+
+    // Créer tous les répertoires nécessaires dans pathFile
+    try {
+        fs.mkdirSync(fullPath, { recursive: true });
+    } catch (error) {
+        console.error('Erreur lors de la création des répertoires :', error);
+        return res.status(500).json({ message: 'Erreur lors de la création des répertoires.' });
+    }
+
+    // Construire le chemin complet du fichier
+    const filePath = path.join(fullPath, nameFile);
+
+    // Écrire ou mettre à jour le fichier
+    try {
+        fs.writeFileSync(filePath, file, 'utf-8');
+    } catch (error) {
+        console.error('Erreur lors de l\'écriture du fichier :', error);
+        return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier.' });
+    }
+
+    return res.status(200).json({ message: 'Fichier créé ou mis à jour avec succès.' });
+};
