@@ -85,18 +85,76 @@ exports.get_scenarios = (req, res) => {
     if (!fs.existsSync(dockerComposePath)) {
         return res.status(404).json({ message: 'Le fichier docker-compose.yml n\'existe pas.' });
     }
+    let dockerComposeJson = {};
 
     try {
         const dockerComposeContent = fs.readFileSync(dockerComposePath, 'utf-8');
-        const dockerComposeJson = yaml.parse(dockerComposeContent); // Utilisation de yaml.parse
+        dockerComposeJson = yaml.parse(dockerComposeContent); // Utilisation de yaml.parse
         console.log("dockerComposeJson", dockerComposeJson);
-        //supprime les machine de base (guacamole,postgres,guacd) 
+        
 
-        return res.status(200).json({ scenarioName, dockerComposeJson });
+
     } catch (error) {
         console.error('Erreur lors du parsing du fichier YAML :', error);
         return res.status(500).json({ message: 'Erreur lors du parsing du fichier YAML.' });
     }
+    //TODO : 
+    // Ajouter les autres Dockerfile et fichiers 
+    // Ajouter les autres fichiers nécessaires au scénario
+
+    //rajoute tous les fichiers qui sont dans les dossier du scénario hors : ./data, drive, init,record
+    const files = fs.readdirSync(scenarioPath, { withFileTypes: true });
+    const dirToExclude = ['data', 'drive', 'init', 'record'];
+    const filesToExclude = ['docker-compose.yml', 'isrunning', 'script.py','down.py', 'Dockerfile.kali_blue', 'Dockerfile.kali_red', 'Dockerfile.filebeat', 'filebeat.yml', "vm_connections.json", "README.md"];
+    const getFilesRecursively = (dir, dirToExclude, baseDir) => {
+        const result = [];
+
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+        entries.forEach((entry) => {
+            const entryPath = path.join(dir, entry.name);
+
+            // Skip excluded directories
+            if (entry.isDirectory() && dirToExclude.includes(entry.name)) {
+                return;
+            }
+
+            // Skip excluded files
+            if (!entry.isDirectory() && filesToExclude.includes(entry.name)) {
+                return;
+            }
+
+            if (entry.isDirectory()) {
+                // Recursively process subdirectories
+                result.push(...getFilesRecursively(entryPath, dirToExclude, baseDir));
+            } else {
+                // Include files
+                const relativePath = path.relative(baseDir, entryPath);
+                const content = fs.readFileSync(entryPath, 'utf-8');
+                result.push({
+                    name: entry.name,
+                    path: relativePath,
+                    content: content,
+                });
+            }
+        });
+
+        return result;
+    };
+
+    const filesJson = getFilesRecursively(scenarioPath, dirToExclude, scenarioPath, filesToExclude);
+    //console.log("filesJson", filesJson);
+
+    //renvoie le json avec le contenu de dockerComposeJson et filesJson
+    const response = {
+        dockerComposeJson: dockerComposeJson,
+        filesJson: filesJson,
+        scenarioName: scenarioName,
+    };
+    //console.log("response", response);
+    res.json(response);
+
+    
 };
 
 exports.updateScenario = (req, res) => {
