@@ -100,6 +100,42 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
     }
   }, [location.state]);
 
+  const handleUpdate = async () => {
+    const updatedData = {
+      scenarioName: location.state?.scenario?.scenarioName || "exampleScenario",
+      NbRed: nbAttack,
+      NbBlue: nbDefense,
+      BoolSiem: siem,
+      dockerComposeJson: {
+        services: {
+          service1: { image: "nginx" },
+          service2: { image: "redis" }
+        },
+        volumes: {
+          volume1: {}
+        }
+      }
+    };
+  
+    try {
+      const response = await fetch("http://localhost:3000/api/cyberforge/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+      if (response.ok) {
+        console.log("Mise à jour réussie");
+      } else {
+        console.error("Erreur lors de la mise à jour");
+      }
+    } catch (error) {
+      console.error("Erreur de connexion", error);
+    }
+  };
+  
+
   const addMachine = () => {
     const newMachine = {
       id: machines.length + 1,
@@ -261,6 +297,10 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
       <div className="buttons-container">
       <button type="button" className="back-btn" onClick={() => navigate("/")}>
         Retour au menu
+      </button>
+
+      <button type="button" className="update-btn" onClick={handleUpdate}>
+        Mettre à jour
       </button>
 
         <button type="button" className="add-btn" onClick={addMachine}>
