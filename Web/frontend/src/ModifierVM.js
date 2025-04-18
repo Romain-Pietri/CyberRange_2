@@ -1,157 +1,291 @@
-import React, { useState, useEffect } from 'react';
-import { getSessionCookie } from './utils/auth';
-import './styles/ModifierVM.css';
+import React, { useState } from "react";
+import "./styles/ModifierVM.css";
 
 const ModifierVM = () => {
-    const [scenarios, setScenarios] = useState([]);
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [newScenarioName, setNewScenarioName] = useState('');
+  const [nbAttack, setNbAttack] = useState(0);
+  const [nbDefense, setNbDefense] = useState(0);
+  const [siem, setSiem] = useState(false);
+  const [machines, setMachines] = useState([]);
+  const [networks, setNetworks] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [currentMachine, setCurrentMachine] = useState(null);
+  const [currentNetwork, setCurrentNetwork] = useState(null);
+  const [networkMenuOpen, setNetworkMenuOpen] = useState(false);
 
-    // Récupération des scénarios
-    const fetchScenarios = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/list', {
-                headers: { Authorization: `Bearer ${getSessionCookie('session_token')}` },
-            });
-            const data = await response.json();
-            if (response.ok) {
-                setScenarios(data);
-            } else {
-                setError(data.message || 'Erreur lors de la récupération des scénarios.');
-            }
-        } catch (err) {
-            setError('Erreur réseau.');
-        }
+  const addMachine = () => {
+    const newMachine = {
+      id: machines.length + 1,
+      name: "Machine " + (machines.length + 1),
+      os: "",
+      username: "",
+      password: "",
+      networks: [],
+      openPort: "",
+      installType: "Serveur SSH",
     };
+    setMachines([...machines, newMachine]);
+  };
 
-    const deleteScenario = async (scenario) => {
-        const confirmDelete = window.confirm(`Êtes-vous sûr de vouloir supprimer le scénario "${scenario}" ?`);
-        if (!confirmDelete) return;
-
-        setLoading(true);
-        try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${getSessionCookie('session_token')}`,
-                },
-                body: JSON.stringify({ scenario }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                alert(data.message);
-                fetchScenarios();
-            } else {
-                setError(data.message || 'Erreur lors de la suppression.');
-            }
-        } catch (err) {
-            setError('Erreur réseau.');
-        } finally {
-            setLoading(false);
-        }
+  const addNetwork = () => {
+    const newNetwork = {
+      id: networks.length + 1,
+      name: "Réseau " + (networks.length + 1),
+      subnetMask: "255.255.255.0",
     };
+    setNetworks([...networks, newNetwork]);
+  };
 
-    const addScenario = async () => {
-        if (!newScenarioName.trim()) {
-            alert('Le nom du scénario ne peut pas être vide.');
-            return;
-        }
+  const openMachineMenu = (machine) => {
+    setCurrentMachine(machine);
+    setMenuOpen(true);
+    setNetworkMenuOpen(false);
+  };
 
-        setLoading(true);
-        try {
-            const response = await fetch('http://localhost:3000/api/cyberforge/create-scenario', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${getSessionCookie('session_token')}`,
-                    
-                },
-                body: JSON.stringify({ scenarioName: newScenarioName }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                alert(data.message);
-                fetchScenarios();
-                setShowAddModal(false);
-                setNewScenarioName('');
-            } else {
-                setError(data.message || 'Erreur lors de l\'ajout du scénario.');
-            }
-        } catch (err) {
-            setError('Erreur réseau.');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const openNetworkMenu = (network) => {
+    setCurrentNetwork(network);
+    setNetworkMenuOpen(true);
+    setMenuOpen(false);
+  };
 
-    useEffect(() => {
-        fetchScenarios();
-    }, []);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setCurrentMachine(null);
+    setNetworkMenuOpen(false);
+    setCurrentNetwork(null);
+  };
 
-    return (
-        <div className="gestion-vm-container">
-            <h1>Modifier les Scénarios</h1>
-            {error && <p className="error">{error}</p>}
-            <div className="scenario-list">
-                <h2>Liste des scénarios</h2>
-                <ul>
-                    {scenarios.map((scenario) => (
-                        <li key={scenario} className="scenario-item">
-                            <span>{scenario}</span>
-                            <div className="button-group">
-                                <button
-                                    className="edit-button"
-                                    onClick={() => alert(`Modifier "${scenario}" (fonction non implémentée)`)}
-                                    disabled={loading}
-                                >
-                                    Modifier
-                                </button>
-                                <button
-                                    className="delete-button"
-                                    onClick={() => deleteScenario(scenario)}
-                                    disabled={loading}
-                                >
-                                    Supprimer
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <button
-                className="add-button"
-                onClick={() => setShowAddModal(true)}
-                disabled={loading}
-            >
-                Ajouter un Scénario
-            </button>
+  const deleteMachine = (id) => {
+    setMachines(machines.filter((machine) => machine.id !== id));
+    if (currentMachine && currentMachine.id === id) {
+      closeMenu();
+    }
+  };
 
-            {showAddModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Ajouter un Scénario</h2>
-                        <input
-                            type="text"
-                            placeholder="Nom du scénario"
-                            value={newScenarioName}
-                            onChange={(e) => setNewScenarioName(e.target.value)}
-                        />
-                        <div className="modal-buttons">
-                            <button onClick={addScenario} disabled={loading}>
-                                Ajouter
-                            </button>
-                            <button onClick={() => setShowAddModal(false)} disabled={loading}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
+  const deleteNetwork = (id) => {
+    setNetworks(networks.filter((network) => network.id !== id));
+    if (currentNetwork && currentNetwork.id === id) {
+      closeMenu();
+    }
+  };
+
+  const updateMachine = (key, value) => {
+    setMachines((prev) =>
+      prev.map((machine) =>
+        machine.id === currentMachine.id ? { ...machine, [key]: value } : machine
+      )
     );
+    setCurrentMachine((prev) => (prev ? { ...prev, [key]: value } : prev));
+  };
+
+  const toggleNetworkForMachine = (networkName) => {
+    if (!currentMachine) return;
+    const isSelected = currentMachine.networks.includes(networkName);
+    const updatedNetworks = isSelected
+      ? currentMachine.networks.filter((n) => n !== networkName)
+      : [...currentMachine.networks, networkName];
+
+    updateMachine("networks", updatedNetworks);
+  };
+
+  const updateNetwork = (key, value) => {
+    setNetworks((prev) =>
+      prev.map((network) =>
+        network.id === currentNetwork.id ? { ...network, [key]: value } : network
+      )
+    );
+    setCurrentNetwork((prev) => (prev ? { ...prev, [key]: value } : prev));
+  };
+
+  const osOptions = ["Kali", "Ubuntu", "Debian", "Alpine", "CentOS"];
+
+  return (
+    <>
+      <div className="top-bar">
+        <div className="menu-icon" onClick={closeMenu}>
+          &#9776;
+        </div>
+
+        <div className="form-group">
+          <label>Nombre Attaquants:</label>
+          <input
+            type="number"
+            min="0"
+            value={nbAttack}
+            onChange={(e) => setNbAttack(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Nombre Défenseurs:</label>
+          <input
+            type="number"
+            min="0"
+            value={nbDefense}
+            onChange={(e) => setNbDefense(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group checkbox">
+          <label>
+            SIEM
+            <input
+              type="checkbox"
+              checked={siem}
+              onChange={(e) => setSiem(e.target.checked)}
+            />
+          </label>
+        </div>
+
+        <h1 className="title">Modification de Scenario</h1>
+      </div>
+
+      <div className="buttons-container">
+        <button type="button" className="add-btn" onClick={addMachine}>
+          + Ajouter une machine
+        </button>
+        <button type="button" className="add-btn" onClick={addNetwork}>
+          + Ajouter un réseau
+        </button>
+      </div>
+
+      <div className="creation-container">
+        {machines.map((machine) => (
+          <div
+            key={machine.id}
+            className="machine-icon"
+            onClick={() => openMachineMenu(machine)}
+          >
+            🖥️
+            <span className="machine-name">{machine.name}</span>
+            <span className="machine-networks">
+              {machine.networks && machine.networks.join(", ")}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="network-grid">
+        {networks.map((network) => (
+          <div
+            key={network.id}
+            className="network-icon"
+            onClick={() => openNetworkMenu(network)}
+          >
+            🌐
+            <span className="network-name">{network.name}</span>
+          </div>
+        ))}
+      </div>
+
+      {menuOpen && currentMachine && (
+        <div className="side-menu">
+          <div className="side-menu-content">
+            <h2 id="machine">Machine {currentMachine.id}</h2>
+            <div>
+              <label>Nom:</label>
+              <input
+                type="text"
+                value={currentMachine.name}
+                onChange={(e) => updateMachine("name", e.target.value)}
+              />
+            </div>
+            <div>
+              <label>OS:</label>
+              <select
+                value={currentMachine.os}
+                onChange={(e) => updateMachine("os", e.target.value)}
+              >
+                <option value="">Choisir un OS</option>
+                {osOptions.map((os) => (
+                  <option key={os} value={os}>{os}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Identifiant:</label>
+              <input
+                type="text"
+                value={currentMachine.username}
+                onChange={(e) => updateMachine("username", e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Mot de passe:</label>
+              <input
+                type="password"
+                value={currentMachine.password}
+                onChange={(e) => updateMachine("password", e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Ports ouverts:</label>
+              <input
+                type="text"
+                value={currentMachine.openPort}
+                onChange={(e) => updateMachine("openPort", e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Réseaux associés:</label>
+              {networks.map((net) => (
+                <div key={net.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={currentMachine.networks.includes(net.name)}
+                      onChange={() => toggleNetworkForMachine(net.name)}
+                    />
+                    {net.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div>
+              <label>Type d'installation:</label>
+              <select
+                value={currentMachine.installType}
+                onChange={(e) => updateMachine("installType", e.target.value)}
+              >
+                <option>Serveur SSH</option>
+                <option>FTP</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <button className="delete-btn" onClick={() => deleteMachine(currentMachine.id)}>
+              Supprimer la machine
+            </button>
+          </div>
+        </div>
+      )}
+
+      {networkMenuOpen && currentNetwork && (
+        <div className="side-menu">
+          <div className="side-menu-content">
+            <h2 id="reseau">Réseau {currentNetwork.id}</h2>
+            <div>
+              <label>Nom:</label>
+              <input
+                type="text"
+                value={currentNetwork.name}
+                onChange={(e) => updateNetwork("name", e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Masque de sous-réseau:</label>
+              <input
+                type="text"
+                value={currentNetwork.subnetMask}
+                onChange={(e) => updateNetwork("subnetMask", e.target.value)}
+              />
+            </div>
+            <button className="delete-btn" onClick={() => deleteNetwork(currentNetwork.id)}>
+              Supprimer le réseau
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default ModifierVM;

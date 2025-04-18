@@ -42,7 +42,7 @@ const Menu = ({ onLogout }) => {
                 alert(data.message);
                 setShowAddModal(false);
                 setNewScenarioName('');
-                navigate('/creation-vm'); // Redirection vers la page CreationVM
+                navigate('/modifier-vm');
             } else {
                 alert(data.message || 'Erreur lors de l\'ajout du scénario.');
             }
@@ -58,7 +58,8 @@ const Menu = ({ onLogout }) => {
             <h1>Menu Principal</h1>
             <div className="menu-buttons">
                 <button onClick={() => navigate('/gestion-vm')}>Gestion Machines Virtuelles</button>
-                <button onClick={() => navigate('/modifier-vm')}>Modifier / Supprimer Scénarios</button>
+                <button onClick={() => navigate('/supprimer-vm')}>Supprimer Scénarios</button>
+                <button onClick={() => navigate('/choix-scenario')}>Modifier Scénarios</button>
             </div>
             <button
                 className="add-button"

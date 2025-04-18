@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Menu from './Menu';
 import GestionVM from './GestionVM';
+import SupprimerVM from './SupprimerVM';
 import ModifierVM from './ModifierVM';
-import CreationVM from './CreationVM';
+import ChoixScenario from './ChoixScenario';
 import CyberForge from './CyberForge';
 
 const App = () => {
@@ -27,8 +28,9 @@ const App = () => {
                     <>
                         <Route path="/" element={<Menu onLogout={handleLogout} />} />
                         <Route path="/gestion-vm" element={<GestionVM />} />
+                        <Route path="/supprimer-vm" element={<SupprimerVM />} />
                         <Route path="/modifier-vm" element={<ModifierVM />} />
-                        <Route path="/creation-vm" element={<CreationVM />} />
+                        <Route path="/choix-scenario" element={<ChoixScenario />} />
                         <Route path="/cyberForge" element={<CyberForge />} />
                         {/* Ajoutez d'autres routes ici si nécessaire */}
                     </>
