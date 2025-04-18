@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./styles/ModifierVM.css";
 
-const ModifierVM = () => {
+const ModifierVM = ({ existingScenario }) => {
   const [nbAttack, setNbAttack] = useState(0);
   const [nbDefense, setNbDefense] = useState(0);
   const [siem, setSiem] = useState(false);
@@ -11,6 +12,61 @@ const ModifierVM = () => {
   const [currentMachine, setCurrentMachine] = useState(null);
   const [currentNetwork, setCurrentNetwork] = useState(null);
   const [networkMenuOpen, setNetworkMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.scenario) {
+      const { dockerComposeJson, filesJson } = location.state.scenario;
+  
+      try {
+        const parsedCompose = dockerComposeJson; // PAS besoin de JSON.parse
+        const services = parsedCompose.services || {};
+        const allNetworks = parsedCompose.networks || {};
+  
+        const machinesFormatted = Object.entries(services).map(([name, config], index) => {
+          const envVars = config.environment || {};
+          const envMap = typeof envVars === "object" ? envVars : {};
+  
+          return {
+            id: index + 1,
+            name,
+            os: config.image || (config.build && config.build.dockerfile) || "",
+            username: envMap.USERNAME || "",
+            password: envMap.PASSWORD || "",
+            networks: config.networks || [],
+            openPort: (config.ports && config.ports.join(', ')) || "",
+            installType: envMap.INSTALL_TYPE || "Serveur SSH",
+            role: envMap.ROLE || "none",
+          };
+        });
+  
+        const nbAttack = machinesFormatted.filter(m => m.role === "attacker").length;
+        const nbDefense = machinesFormatted.filter(m => m.role === "defender").length;
+        const siem = machinesFormatted.some(m => m.installType.toLowerCase().includes("siem"));
+  
+        const networksFormatted = Object.entries(allNetworks).map(([name], index) => ({
+          id: index + 1,
+          name,
+          subnetMask: "255.255.255.0", // Par défaut
+        }));
+  
+        setMachines(machinesFormatted);
+        setNetworks(networksFormatted);
+        setNbAttack(nbAttack);
+        setNbDefense(nbDefense);
+        setSiem(siem);
+      } catch (error) {
+        console.error("Erreur lors du traitement du scénario :", error);
+      }
+      console.log("Scénario reçu :", location.state.scenario);
+
+      console.log("dockerComposeJson :", dockerComposeJson);
+
+    }
+  }, [location.state]);
+  
+  
+
 
   const addMachine = () => {
     const newMachine = {

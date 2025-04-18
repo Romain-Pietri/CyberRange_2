@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSessionCookie } from './utils/auth';
 import './styles/GestionVM.css';
 
 const ChoixScenario = () => {
@@ -11,9 +10,7 @@ const ChoixScenario = () => {
     useEffect(() => {
         const fetchScenarios = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/gestionVM/list', {
-                    headers: { Authorization: `Bearer ${getSessionCookie('session_token')}` },
-                });
+                const response = await fetch('http://localhost:3000/api/gestionVM/list');
                 const data = await response.json();
                 if (response.ok) {
                     setScenarios(data);
@@ -27,8 +24,27 @@ const ChoixScenario = () => {
         fetchScenarios();
     }, []);
 
-    const handleEdit = (scenarioName) => {
-        navigate(`/edition-scenario/${scenarioName}`);
+    const handleEdit = async (scenarioName) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/cyberforge/get-scenario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ scenarioName }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Erreur lors de la récupération du scénario.');
+            }
+
+            const scenarioData = await response.json();
+
+            navigate('/modifier-vm', { state: { scenario: scenarioData } });
+        } catch (err) {
+            alert('Erreur réseau : ' + err.message);
+        }
     };
 
     const filteredScenarios = scenarios.filter(s =>
@@ -38,7 +54,7 @@ const ChoixScenario = () => {
     return (
         <div className="gestion-vm-container">
             <h1>Modifier un Scénario</h1>
-            
+
             <div className="scenario-list">
                 <ul>
                     {filteredScenarios.map((scenario) => (
