@@ -5,10 +5,7 @@ body, html {
   height: 100%;
   background-color: #e0e0e0; /* gris clair */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding-left: 400px; 
   box-sizing: border-box;
-
-  
 }
 
 #reseau {
@@ -155,6 +152,22 @@ z-index: 5;
   color: #333;
   text-align: center;
 }
+
+.remove-port-btn {
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 50%;
+}
+
+.remove-port-btn:hover {
+  background: darkred;
+}
+
 
 /* Réseaux */
 .network-grid {

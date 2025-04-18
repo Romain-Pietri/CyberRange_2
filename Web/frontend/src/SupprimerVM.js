@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getSessionCookie } from './utils/auth';
 import './styles/SupprimerVM.css';
+import { useNavigate } from 'react-router-dom';
 
 const SupprimerVM = () => {
     const [scenarios, setScenarios] = useState([]);
@@ -8,6 +9,7 @@ const SupprimerVM = () => {
     const [loading, setLoading] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [newScenarioName, setNewScenarioName] = useState('');
+    const navigate = useNavigate();
 
     // Récupération des scénarios
     const fetchScenarios = async () => {
@@ -114,35 +116,10 @@ const SupprimerVM = () => {
                     ))}
                 </ul>
             </div>
-            <button
-                className="add-button"
-                onClick={() => setShowAddModal(true)}
-                disabled={loading}
-            >
-                Ajouter un Scénario
+            
+            <button type="button" className="back-btn" onClick={() => navigate("/")}>
+                Retour au menu
             </button>
-
-            {showAddModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Ajouter un Scénario</h2>
-                        <input
-                            type="text"
-                            placeholder="Nom du scénario"
-                            value={newScenarioName}
-                            onChange={(e) => setNewScenarioName(e.target.value)}
-                        />
-                        <div className="modal-buttons">
-                            <button onClick={addScenario} disabled={loading}>
-                                Ajouter
-                            </button>
-                            <button onClick={() => setShowAddModal(false)} disabled={loading}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getSessionCookie } from './utils/auth';
 import './styles/GestionVM.css';
+import { useNavigate } from 'react-router-dom';
 
 const GestionVM = () => {
     const [scenarios, setScenarios] = useState([]);
     const [runningScenarios, setRunningScenarios] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     // Vérifie les scénarios en cours d'exécution
     const fetchRunningScenarios = async () => {
@@ -131,6 +133,9 @@ const GestionVM = () => {
                     ))}
                 </ul>
             </div>
+            <button type="button" className="back-btn" onClick={() => navigate("/")}>
+                Retour au menu
+            </button>
         </div>
     );
 };

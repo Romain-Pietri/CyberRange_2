@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import "./styles/ModifierVM.css";
 
 const ModifierVM = ({ existingScenario }) => {
@@ -13,20 +15,32 @@ const ModifierVM = ({ existingScenario }) => {
   const [currentNetwork, setCurrentNetwork] = useState(null);
   const [networkMenuOpen, setNetworkMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state && location.state.scenario) {
-      const { dockerComposeJson, filesJson } = location.state.scenario;
-  
+      const { dockerComposeJson, filesJson, scenarioName } = location.state.scenario;
+
       try {
-        const parsedCompose = dockerComposeJson; // PAS besoin de JSON.parse
+        const parsedCompose = dockerComposeJson;
         const services = parsedCompose.services || {};
         const allNetworks = parsedCompose.networks || {};
-  
-        const machinesFormatted = Object.entries(services).map(([name, config], index) => {
+
+        // Filtres pour ne pas afficher certaines machines
+        const excludedMachines = ["kali_red", "kali_blue", "guacd", "postgres", "guacamole", "filebeat", "logstash", "elasticsearch", "kibana", "suricata", "zeek", "attacker", "defender"];
+        const filteredServices = Object.entries(services).filter(
+          ([name]) => !excludedMachines.some(ex => name.toLowerCase().startsWith(ex))
+        );
+
+        // Filtres pour ne pas afficher certains réseaux
+        const filteredNetworks = Object.entries(allNetworks).filter(
+          ([name]) => name !== "guacnetwork_compose"
+        );
+
+        const machinesFormatted = filteredServices.map(([name, config], index) => {
           const envVars = config.environment || {};
           const envMap = typeof envVars === "object" ? envVars : {};
-  
+
           return {
             id: index + 1,
             name,
@@ -39,17 +53,17 @@ const ModifierVM = ({ existingScenario }) => {
             role: envMap.ROLE || "none",
           };
         });
-  
+
         const nbAttack = machinesFormatted.filter(m => m.role === "attacker").length;
         const nbDefense = machinesFormatted.filter(m => m.role === "defender").length;
         const siem = machinesFormatted.some(m => m.installType.toLowerCase().includes("siem"));
-  
-        const networksFormatted = Object.entries(allNetworks).map(([name], index) => ({
+
+        const networksFormatted = filteredNetworks.map(([name], index) => ({
           id: index + 1,
           name,
-          subnetMask: "255.255.255.0", // Par défaut
+          subnetMask: "255.255.255.0",
         }));
-  
+
         setMachines(machinesFormatted);
         setNetworks(networksFormatted);
         setNbAttack(nbAttack);
@@ -59,14 +73,9 @@ const ModifierVM = ({ existingScenario }) => {
         console.error("Erreur lors du traitement du scénario :", error);
       }
       console.log("Scénario reçu :", location.state.scenario);
-
       console.log("dockerComposeJson :", dockerComposeJson);
-
     }
   }, [location.state]);
-  
-  
-
 
   const addMachine = () => {
     const newMachine = {
@@ -133,16 +142,6 @@ const ModifierVM = ({ existingScenario }) => {
     setCurrentMachine((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
-  const toggleNetworkForMachine = (networkName) => {
-    if (!currentMachine) return;
-    const isSelected = currentMachine.networks.includes(networkName);
-    const updatedNetworks = isSelected
-      ? currentMachine.networks.filter((n) => n !== networkName)
-      : [...currentMachine.networks, networkName];
-
-    updateMachine("networks", updatedNetworks);
-  };
-
   const updateNetwork = (key, value) => {
     setNetworks((prev) =>
       prev.map((network) =>
@@ -153,6 +152,30 @@ const ModifierVM = ({ existingScenario }) => {
   };
 
   const osOptions = ["Kali", "Ubuntu", "Debian", "Alpine", "CentOS"];
+
+  const addPort = () => {
+    if (currentMachine) {
+      const ports = currentMachine.openPort ? currentMachine.openPort.split(", ") : [];
+      ports.push("");
+      updateMachine("openPort", ports.join(", "));
+    }
+  };
+
+  const removePort = (index) => {
+    if (currentMachine) {
+      const ports = currentMachine.openPort ? currentMachine.openPort.split(", ") : [];
+      ports.splice(index, 1);
+      updateMachine("openPort", ports.join(", "));
+    }
+  };
+
+  const updatePort = (index, value) => {
+    if (currentMachine) {
+      const ports = currentMachine.openPort ? currentMachine.openPort.split(", ") : [];
+      ports[index] = value;
+      updateMachine("openPort", ports.join(", "));
+    }
+  };
 
   return (
     <>
@@ -193,9 +216,14 @@ const ModifierVM = ({ existingScenario }) => {
         </div>
 
         <h1 className="title">Modification de Scenario</h1>
+        <p className="scenario-name">{location.state?.scenario?.scenarioName}</p>
       </div>
 
       <div className="buttons-container">
+      <button type="button" className="back-btn" onClick={() => navigate("/")}>
+        Retour au menu
+      </button>
+
         <button type="button" className="add-btn" onClick={addMachine}>
           + Ajouter une machine
         </button>
@@ -233,6 +261,7 @@ const ModifierVM = ({ existingScenario }) => {
         ))}
       </div>
 
+      {/* Menu pour la machine */}
       {menuOpen && currentMachine && (
         <div className="side-menu">
           <div className="side-menu-content">
@@ -275,51 +304,58 @@ const ModifierVM = ({ existingScenario }) => {
             </div>
             <div>
               <label>Ports ouverts:</label>
-              <input
-                type="text"
-                value={currentMachine.openPort}
-                onChange={(e) => updateMachine("openPort", e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Réseaux associés:</label>
-              {networks.map((net) => (
-                <div key={net.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={currentMachine.networks.includes(net.name)}
-                      onChange={() => toggleNetworkForMachine(net.name)}
-                    />
-                    {net.name}
-                  </label>
+              <button type="button" onClick={addPort}>
+                + Ajouter un port
+              </button>
+              {currentMachine.openPort.split(", ").map((port, index) => (
+                <div key={index} className="port-container">
+                  <input
+                    type="text"
+                    value={port}
+                    onChange={(e) => updatePort(index, e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="remove-port-btn"
+                    onClick={() => removePort(index)}
+                  >
+                    &#10006;
+                  </button>
                 </div>
               ))}
             </div>
             <div>
-              <label>Type d'installation:</label>
-              <select
-                value={currentMachine.installType}
-                onChange={(e) => updateMachine("installType", e.target.value)}
-              >
-                <option>Serveur SSH</option>
-                <option>FTP</option>
-                <option>Autre</option>
-              </select>
+              <label>Réseaux:</label>
+              {networks.map((network) => (
+                <div key={network.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={currentMachine.networks.includes(network.name)}
+                      onChange={() => toggleNetworkForMachine(network.name)}
+                    />
+                    {network.name}
+                  </label>
+                </div>
+              ))}
             </div>
-            <button className="delete-btn" onClick={() => deleteMachine(currentMachine.id)}>
-              Supprimer la machine
+            <button type="button" onClick={() => deleteMachine(currentMachine.id)}>
+              Supprimer cette machine
+            </button>
+            <button type="button" onClick={closeMenu}>
+              Fermer le menu
             </button>
           </div>
         </div>
       )}
 
+      {/* Menu pour le réseau */}
       {networkMenuOpen && currentNetwork && (
         <div className="side-menu">
           <div className="side-menu-content">
-            <h2 id="reseau">Réseau {currentNetwork.id}</h2>
+            <h2 id="machine">Réseau {currentNetwork.id}</h2>
             <div>
-              <label>Nom:</label>
+              <label id="machine">Nom:</label>
               <input
                 type="text"
                 value={currentNetwork.name}
@@ -334,8 +370,11 @@ const ModifierVM = ({ existingScenario }) => {
                 onChange={(e) => updateNetwork("subnetMask", e.target.value)}
               />
             </div>
-            <button className="delete-btn" onClick={() => deleteNetwork(currentNetwork.id)}>
-              Supprimer le réseau
+            <button type="button" onClick={() => deleteNetwork(currentNetwork.id)}>
+              Supprimer ce réseau
+            </button>
+            <button type="button" onClick={closeMenu}>
+              Fermer le menu
             </button>
           </div>
         </div>

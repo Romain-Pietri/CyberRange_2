@@ -70,6 +70,9 @@ const ChoixScenario = () => {
                     ))}
                 </ul>
             </div>
+            <button type="button" className="back-btn" onClick={() => navigate("/")}>
+                Retour au menu
+            </button>
         </div>
     );
 };
