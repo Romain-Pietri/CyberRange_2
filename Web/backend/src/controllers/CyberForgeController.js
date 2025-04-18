@@ -54,7 +54,7 @@ exports.createScenario = (req, res) => {
         fs.writeFileSync(isRunningPath, '0', 'utf-8'); // 0 signifie que le scénario n'est pas en cours d'exécution
 
         // Copier le contenu du répertoire model dans le répertoire du scénario
-        const modelDir = path.join(__dirname, '/init_model/');
+        const modelDir = path.join(__dirname, '/model/');
         copyFolderRecursiveSync(modelDir, scenariosDir);
 
         return res.status(201).json({ message: 'Scénario créé avec succès.' });
@@ -239,7 +239,7 @@ exports.updateScenario = (req, res) => {
             dockerComposeJson.services[`kali_red${i}`] = {
                 dockerfile: 'Dockerfile.kali_red',
                 container_name: `kali_red_${i}`,
-                ports: [`${3389 + i}:3389`],
+                ports: [`${3389 + i+NbBlue}:3389`],
                 privileged: true,
                 networks: {
                     guacnetwork_compose: {},
@@ -249,6 +249,50 @@ exports.updateScenario = (req, res) => {
             };
         }
     }
+    //Met a jour le fichier vm_connections.json
+    const vmConnectionsPath = path.join(scenarioPath, 'vm_connections.json');
+    /*
+    [
+  {
+    "name": "Kali Red 1",
+    "hostname": "$",
+    "port": "3389",
+    "protocol": "rdp",
+    "username": "kaliuser",
+    "password": "kali"
+  },
+    */
+    tempJson=[];
+    for (let i = 1; i <= NbRed; i++) {
+        tempJson.push({
+            "name": `Kali Red ${i}`,
+            "hostname": `$`,
+            "port": `${3389 + i+NbBlue}`,
+            "protocol": "rdp",
+            "username": "kaliuser",
+            "password": "kali"
+        });
+    }
+    for (let i = 1; i <= NbBlue; i++) {
+        tempJson.push({
+            "name": `Kali Blue ${i}`,
+            "hostname": `$`,
+            "port": `${3389 + i}`,
+            "protocol": "rdp",
+            "username": "kaliuser",
+            "password": "kali"})
+    };
+
+    //Ecrit le fichier vm_connections.json
+    try {
+        fs.writeFileSync(vmConnectionsPath, JSON.stringify(tempJson, null, 2), 'utf-8');
+    } catch (error) {
+        console.error('Erreur lors de l\'écriture du fichier JSON :', error);
+        return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier JSON.' });
+    }
+    
+
+
     let siemJson={}
     try {
         const siemData = fs.readFileSync(path.join(__dirname, '/other_model/Siem.yml'), 'utf-8');
