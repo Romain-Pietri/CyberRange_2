@@ -42,7 +42,7 @@ const Menu = ({ onLogout }) => {
                 alert(data.message);
                 setShowAddModal(false);
                 setNewScenarioName('');
-                navigate('/modifier-vm');
+                navigate('/');
             } else {
                 alert(data.message || 'Erreur lors de l\'ajout du scénario.');
             }
