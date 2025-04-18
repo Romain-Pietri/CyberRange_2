@@ -54,9 +54,15 @@ const ModifierVM = ({ existingScenario }) => {
           };
         });
 
-        const nbAttack = machinesFormatted.filter(m => m.role === "attacker").length;
-        const nbDefense = machinesFormatted.filter(m => m.role === "defender").length;
-        const siem = machinesFormatted.some(m => m.installType.toLowerCase().includes("siem"));
+        // Compte les kali_red et kali_blue même si elles sont exclues de l'affichage
+        const allServiceNames = Object.keys(services);
+        const nbAttack = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_red")).length;
+        const nbDefense = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_blue")).length;
+
+        // Détection de SIEM via la présence de kibana
+        const siem = allServiceNames.some(name => name.toLowerCase().includes("kibana"));
+
+
 
         const networksFormatted = filteredNetworks.map(([name], index) => ({
           id: index + 1,
@@ -215,7 +221,7 @@ const ModifierVM = ({ existingScenario }) => {
           </label>
         </div>
 
-        <h1 className="title">Modification de Scenario</h1>
+        <h1 className="title">Modification de Scenario :</h1>
         <p className="scenario-name">{location.state?.scenario?.scenarioName}</p>
       </div>
 
