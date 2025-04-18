@@ -14,6 +14,10 @@ const ModifierVM = ({ existingScenario }) => {
   const [currentMachine, setCurrentMachine] = useState(null);
   const [currentNetwork, setCurrentNetwork] = useState(null);
   const [networkMenuOpen, setNetworkMenuOpen] = useState(false);
+  const [readme, setReadme] = useState({ name: "README.md", content: "" });
+const [showReadmeEditor, setShowReadmeEditor] = useState(false);
+
+  
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -80,6 +84,19 @@ const ModifierVM = ({ existingScenario }) => {
       }
       console.log("Scénario reçu :", location.state.scenario);
       console.log("dockerComposeJson :", dockerComposeJson);
+
+      const readmeFile = filesJson.find(
+        (file) => file.name.toLowerCase().includes("readme")
+      );
+      
+      if (readmeFile) {
+        setReadme({
+          name: readmeFile.name,
+          content: readmeFile.content
+        });
+      }
+      
+      
     }
   }, [location.state]);
 
@@ -106,6 +123,15 @@ const ModifierVM = ({ existingScenario }) => {
     setNetworks([...networks, newNetwork]);
   };
 
+  const addReadme = () => {
+    const newReadme = {
+      id: readme.length + 1,
+      name: "README.md",
+      content: "",
+    };
+    setReadme(newReadme);
+  };
+
   const openMachineMenu = (machine) => {
     setCurrentMachine(machine);
     setMenuOpen(true);
@@ -117,6 +143,13 @@ const ModifierVM = ({ existingScenario }) => {
     setNetworkMenuOpen(true);
     setMenuOpen(false);
   };
+
+  const openReadmeEditor = () => {
+    setShowReadmeEditor(true); // Afficher l'éditeur
+    setCurrentMachine(null); // Fermer les autres menus si ouverts
+    setNetworkMenuOpen(false); // Fermer le menu réseau si ouvert
+  };
+  
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -236,6 +269,10 @@ const ModifierVM = ({ existingScenario }) => {
         <button type="button" className="add-btn" onClick={addNetwork}>
           + Ajouter un réseau
         </button>
+        <button type="button" className="add-btn" onClick={addReadme}>
+          + Ajouter / reset un README
+        </button>
+
       </div>
 
       <div className="creation-container">
@@ -254,6 +291,21 @@ const ModifierVM = ({ existingScenario }) => {
         ))}
       </div>
 
+      {/* Affichage des read me */}
+      <div className="readme-container">
+        {readme.name && (
+          <div
+            className="readme-icon"
+            onClick={() => openReadmeEditor()}
+          >
+            📄
+            <span className="readme-name">{readme.name}</span>
+          </div>
+        )}
+      </div>
+
+
+
       <div className="network-grid">
         {networks.map((network) => (
           <div
@@ -266,6 +318,45 @@ const ModifierVM = ({ existingScenario }) => {
           </div>
         ))}
       </div>
+
+      {/* Menu pour le README */}
+      {showReadmeEditor && (
+        <div className="side-menu">
+          <div className="side-menu-content">
+            <h2>README</h2>
+            <div>
+              <label>Nom du fichier :</label>
+              <input
+                type="text"
+                value={readme.name}
+                onChange={(e) => setReadme({ ...readme, name: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label>Contenu :</label>
+              <div></div>
+              <textarea
+                rows="30"
+                cols="35"
+                value={readme.content}
+                onChange={(e) => setReadme({ ...readme, content: e.target.value })}
+              />
+            </div>
+            
+            <button type="button" onClick={() => {
+              setReadme({ name: "", content: "" });  // Réinitialise le readme
+              setShowReadmeEditor(false);
+            }}>
+              Supprimer le README
+            </button>
+            <button type="button" onClick={() => setShowReadmeEditor(false)}>
+              Fermer le menu
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {/* Menu pour la machine */}
       {menuOpen && currentMachine && (
