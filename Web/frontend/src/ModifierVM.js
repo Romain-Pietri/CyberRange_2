@@ -217,6 +217,18 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
     setCurrentMachine((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
+  const toggleNetworkForMachine = (networkName) => {
+    if (currentMachine) {
+      const networks = currentMachine.networks || [];
+      if (networks.includes(networkName)) {
+        networks.splice(networks.indexOf(networkName), 1);
+      } else {
+        networks.push(networkName);
+      }
+      updateMachine("networks", networks);
+    }
+  };
+
   const updateNetwork = (key, value) => {
     setNetworks((prev) =>
       prev.map((network) =>
