@@ -10,7 +10,7 @@ const ChoixScenario = () => {
     useEffect(() => {
         const fetchScenarios = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/gestionVM/list');
+                const response = await fetch('http://10.224.0.53:3000/api/gestionVM/list');
                 const data = await response.json();
                 if (response.ok) {
                     setScenarios(data);
@@ -26,7 +26,7 @@ const ChoixScenario = () => {
 
     const handleEdit = async (scenarioName) => {
         try {
-            const response = await fetch('http://localhost:3000/api/cyberforge/get-scenario', {
+            const response = await fetch('http://10.224.0.53:3000/api/cyberforge/get-scenario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

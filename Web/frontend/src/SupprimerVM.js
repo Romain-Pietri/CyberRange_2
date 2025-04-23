@@ -14,7 +14,7 @@ const SupprimerVM = () => {
     // Récupération des scénarios
     const fetchScenarios = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/list', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/list', {
                 headers: { Authorization: `Bearer ${getSessionCookie('session_token')}` },
             });
             const data = await response.json();
@@ -34,7 +34,7 @@ const SupprimerVM = () => {
 
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/delete', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const SupprimerVM = () => {
 
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/cyberforge/create-scenario', {
+            const response = await fetch('http://10.224.0.53:3000/api/cyberforge/create-scenario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

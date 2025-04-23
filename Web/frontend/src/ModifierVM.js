@@ -118,7 +118,7 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
     };
   
     try {
-      const response = await fetch("http://localhost:3000/api/cyberforge/update", {
+      const response = await fetch("http://10.224.0.53:3000/api/cyberforge/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -13,7 +13,7 @@ const GestionVM = () => {
     // Vérifie les scénarios en cours d'exécution
     const fetchRunningScenarios = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/isRunning', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/isRunning', {
                 headers: { Authorization: `Bearer ${getSessionCookie('session_token')}` },
             });
             const data = await response.json();
@@ -30,7 +30,7 @@ const GestionVM = () => {
     // Récupère la liste des scénarios
     const fetchScenarios = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/list', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/list', {
                 headers: { Authorization: `Bearer ${getSessionCookie('session_token')}` },
             });
             const data = await response.json();
@@ -48,7 +48,7 @@ const GestionVM = () => {
     const startScenario = async (scenario) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/start', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/start', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const GestionVM = () => {
     const stopScenario = async (scenario) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/api/gestionVM/stop', {
+            const response = await fetch('http://10.224.0.53:3000/api/gestionVM/stop', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
