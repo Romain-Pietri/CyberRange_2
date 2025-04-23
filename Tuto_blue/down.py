@@ -3,7 +3,7 @@ import sys
 import os
 # Vérifier si un argument a été passé pour le chemin du fichier docker-compose.yml
 if len(sys.argv) < 2:
-    print("Usage : python down.py <chemin-vers-docker-compose.yml>")
+    print("Usage : python3 down.py <chemin-vers-docker-compose.yml>")
     sys.exit(1)
     
 docker_compose_dir = sys.argv[1]

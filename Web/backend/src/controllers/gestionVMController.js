@@ -87,8 +87,8 @@ exports.startScenario = (req, res) => {
   // Exécuter le script de démarrage du scénario
   const startScriptPath = path.join(scenarioDir, 'script.py');
   const { exec } = require('child_process');
-  console.log("Lancement du script Python :", startScriptPath);
-  exec(`python ${startScriptPath} ${scenarioDir}`, (error, stdout, stderr) => {
+  console.log("Lancement du script python3:", startScriptPath);
+  exec(`python3${startScriptPath} ${scenarioDir}`, (error, stdout, stderr) => {
     if (error) {
         console.error(`Erreur lors de l'exécution du script : ${error.message}`);
         console.error(`Sortie standard (stdout) : ${stdout}`);
@@ -146,9 +146,9 @@ exports.stopScenario = (req, res) => {
   // Exécuter le script d'arrêt du scénario
   const stopScriptPath = path.join(scenarioDir, 'down.py');
   const { exec } = require('child_process');
-  console.log("Lancement du script Python :", stopScriptPath);
+  console.log("Lancement du script python3:", stopScriptPath);
 
-  exec(`python ${stopScriptPath} ${scenarioDir}`, (error, stdout, stderr) => {
+  exec(`python3${stopScriptPath} ${scenarioDir}`, (error, stdout, stderr) => {
       // Si une erreur survient, renvoyer une réponse avec les détails
       if (error) {
           console.error(`Erreur lors de l'exécution du script : ${error.message}`);
