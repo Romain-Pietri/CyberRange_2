@@ -81,14 +81,14 @@ Mot de passe : password
 - **SIEM ou non**
 - **Possibilité de rajouter des machines / réseaux ou readme**
 
-![Modifier Scénario](readme/img/modifier.png)
+![Modifier Scénario](Readme/img/modifier.png)
 
 # Configuration Réseau
 
 - **Nom du réseau**
 - **Masque de sous-réseau**
 
-![Modifier Scénario 1](readme/img/modifier1.png)
+![Modifier Scénario 1](Readme/img/modifier1.png)
 
 # Configuration Machines 
 
@@ -98,10 +98,10 @@ Mot de passe : password
 - **Possibiité d'ouvrir des ports**
 - **Affilié la machine à un réseau**
 
-![Modifier Scénario 2](readme/img/modifier2.png)
+![Modifier Scénario 2](Readme/img/modifier2.png)
 
-# ReadMe
+# Configuration ReadMe
 
-![Modifier Scénario 3](readme/img/modifier3.png)
+![Modifier Scénario 3](Readme/img/modifier3.png)
 
 
