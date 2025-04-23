@@ -59,7 +59,7 @@ exports.listScenarios = (req, res) => {
 exports.startScenario = (req, res) => {
   const { scenario } = req.body;
   console.log('scenario', scenario);
-
+  console.log(__dirname);
   // Vérifier si le scénario existe
   const scenarios = listScenarios();
   if (!scenarios.includes(scenario)) {

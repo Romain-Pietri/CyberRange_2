@@ -7,11 +7,10 @@ import requests
 import re
 
 
-# Votre IP de référence
-TRUE_IP = "192.168.1.152"
+
 
 try :
-    #TRUE_IP = subprocess.run("hostname -I", shell=True, capture_output=True, text=True).stdout.split()[0]
+    TRUE_IP = subprocess.run("hostname -I", shell=True, capture_output=True, text=True).stdout.split()[0]
     
     print(TRUE_IP)
 except Exception as e:
