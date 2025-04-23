@@ -249,8 +249,7 @@ exports.updateScenario = (req, res) => {
             };
         }
     }
-    //Met a jour le fichier vm_connections.json
-    const vmConnectionsPath = path.join(scenarioPath, 'vm_connections.json');
+    //Ecrit le fichier vm_connections.json
     /*
     [
   {
@@ -283,13 +282,16 @@ exports.updateScenario = (req, res) => {
             "password": "kali"})
     };
 
-    //Ecrit le fichier vm_connections.json
+    //Ecrit le fichier vm_connections.json 
+    const vmConnectionsPath = path.join(scenarioPath, 'vm_connections.json');
     try {
         fs.writeFileSync(vmConnectionsPath, JSON.stringify(tempJson, null, 2), 'utf-8');
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Erreur lors de l\'écriture du fichier JSON :', error);
         return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier JSON.' });
     }
+            
     
 
 
