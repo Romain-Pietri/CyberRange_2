@@ -57,7 +57,7 @@ try :
     
     os.chdir(docker_compose_dir)  # Changer le répertoire de travail
     run("docker-compose down")
-    run("docker-compose build")
+    run("docker-compose  build")
     run("docker-compose up -d")
 except Exception as e:
     print(f"Erreur lors du démarrage des conteneurs : {e}")

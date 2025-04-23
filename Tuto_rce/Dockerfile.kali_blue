@@ -18,7 +18,7 @@ RUN apt update && apt full-upgrade -y && \
         iputils-ping \
         nmap \
         metasploit-framework \
-        python3  \
+        python3 \
         sudo \
         zsh \
         xrdp \
@@ -41,7 +41,6 @@ RUN apt update && apt full-upgrade -y && \
         logwatch \
         goaccess \
         ansible \
-        python3 -requests \
         netcat-traditional \
         mono-complete && \
     apt clean

@@ -17,7 +17,8 @@ RUN apt update && apt full-upgrade -y && \
         net-tools \
         iputils-ping \
         nmap \
-        python3  \
+        metasploit-framework \
+        python3 \
         sudo \
         zsh \
         xrdp \
@@ -34,10 +35,13 @@ RUN apt update && apt full-upgrade -y && \
         sleuthkit \
         binwalk \
         foremost \
+        theharvester \
+        spiderfoot \
+        maltego \
         logwatch \
         goaccess \
         ansible \
-        python3-requests \
+        netcat-traditional \
         mono-complete && \
     apt clean
 
@@ -54,8 +58,10 @@ RUN useradd -m -s /bin/bash kaliuser && echo "kaliuser:kali" | chpasswd && addus
 RUN echo "startxfce4" > /home/kaliuser/.xsession && \
     chown kaliuser:kaliuser /home/kaliuser/.xsession
 
+# Activer les services XRDP
+RUN systemctl enable xrdp
+
 # Exposer le port RDP
 EXPOSE 3389
 
 CMD ["/bin/bash", "-c", "service dbus start && service xrdp start && tail -f /dev/null"]
-
