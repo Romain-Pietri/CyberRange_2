@@ -164,7 +164,20 @@ exports.updateScenario = (req, res) => {
      //if (!scenarioName || NbRed === undefined || NbBlue === undefined || BoolSiem === undefined || !dockerComposeJson) {
      //   return res.status(400).json({ message: 'Tous les champs (scenarioName, NbRed, NbBlue, BoolSiem, config_yml) sont requis.' });
     //}
-    
+    //Si NbRed ou NbBlue est vide, on le met à 0
+    //si NbRed ou Nbblue est superieur à 9, on le met à 9
+
+    if (NbRed === undefined || NbRed === '') {
+        NbRed = 0;
+    } else if (NbRed > 9) {
+        NbRed = 9;
+    }
+    if (NbBlue === undefined || NbBlue === '') {
+        NbBlue = 0;
+    } else if (NbBlue > 9) {
+        NbBlue = 9;
+    }
+
     console.log("Données reçues :");
     console.log("scenarioName :", scenarioName);
     console.log("NbRed :", NbRed);
