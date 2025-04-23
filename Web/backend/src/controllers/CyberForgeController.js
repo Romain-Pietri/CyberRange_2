@@ -242,7 +242,7 @@ exports.updateScenario = (req, res) => {
             dockerComposeJson.services[`kali_red${i}`] = {
                 dockerfile: 'Dockerfile.kali_red',
                 container_name: `kali_red_${i}`,
-                ports: [`${3389 + i+NbBlue}:3389`],
+                ports: [`${3389 + i-countRed+NbBlue}:3389`],
                 privileged: true,
                 networks: [
                     "guacnetwork_compose",
@@ -265,11 +265,12 @@ exports.updateScenario = (req, res) => {
   },
     */
     tempJson=[];
+    
     for (let i = 1; i <= NbRed; i++) {
         tempJson.push({
             "name": `Kali Red ${i}`,
             "hostname": `$`,
-            "port": `${3389 + i+NbBlue}`,
+            "port": `${3389 + i +NbBlue}`,
             "protocol": "rdp",
             "username": "kaliuser",
             "password": "kali"
