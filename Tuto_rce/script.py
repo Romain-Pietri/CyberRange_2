@@ -21,7 +21,7 @@ except Exception as e:
 
 
 
-# ---------------------- Installations python3----------------------
+# ---------------------- Installations python3 ----------------------
 
 def install_package(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
@@ -43,7 +43,7 @@ import os
 import json
 # Vérifier si un argument a été passé pour le chemin du fichier docker-compose.yml
 if len(sys.argv) < 2:
-    print("Usage : python3script.py <chemin-vers-docker-compose.yml>")
+    print("Usage : python3 script.py <chemin-vers-docker-compose.yml>")
     sys.exit(1)
 
 docker_compose_dir = sys.argv[1]
