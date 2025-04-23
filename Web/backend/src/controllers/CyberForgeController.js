@@ -265,7 +265,7 @@ exports.updateScenario = (req, res) => {
   },
     */
     tempJson=[];
-    const baseport=3389+NbBlue;
+    const baseport=3389+Number(NbBlue);
     for (let i = 1; i <= NbRed; i++) {
         
         console.log("i", i, "NbBlue", NbBlue, "baseport", baseport, "port", baseport + (i-1));
