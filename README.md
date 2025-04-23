@@ -21,7 +21,7 @@
 ### Cloner le dépot
 ``git clone https://github.com/Romain-Pietri/CyberRange_2.git``
 
-``cd CyberRange_2```
+``cd CyberRange_2``
 
 ### Installer docker et docker compose
 
