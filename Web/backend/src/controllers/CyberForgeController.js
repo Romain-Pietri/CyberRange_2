@@ -166,25 +166,8 @@ exports.updateScenario = (req, res) => {
     //}
     //Si NbRed ou NbBlue est vide, on le met à 0
     //si NbRed ou Nbblue est superieur à 9, on le met à 9
-    let NbRed = () => {
-        if (NbRedt === undefined || NbRedt === '') {
-            return 0;
-        } else if (NbRedt > 9) {
-            return 9;
-        } else {
-            return NbRedt;
-        }
-    };
-
-    let NbBlue = () => {
-        if (NbBluet === undefined || NbBluet === '') {
-            return 0;
-        } else if (NbBluet > 9) {
-            return 9;
-        } else {
-            return NbBluet;
-        }
-    };
+    let NbRed = (NbRedt === undefined || NbRedt === '') ? 0 : (NbRedt > 9 ? 9 : NbRedt);
+    let NbBlue = (NbBluet === undefined || NbBluet === '') ? 0 : (NbBluet > 9 ? 9 : NbBluet);
     
 
     console.log("Données reçues :");
