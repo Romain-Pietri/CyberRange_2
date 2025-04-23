@@ -120,6 +120,42 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
             driver: "bridge",
           }
         }
+        ,
+        guacd: {
+          image: "guacamole/guacd:latest",
+          container_name: "guacd",
+          restart: "always",
+          networks: ["guacnetwork_compose"],
+          ports: ["4822:4822"],
+        },
+        postgres: {
+          image: "postgres:latest",
+          container_name: "postgres",
+          restart: "always",
+          networks: ["guacnetwork_compose"],
+          ports: ["5432:5432"],
+          environment: {
+            POSTGRES_USER: "guacamole_user",
+            POSTGRES_PASSWORD: "guacamole_password",
+            POSTGRES_DB: "guacamole_db",
+          },
+        },
+        guacamole: {
+          image: "guacamole/guacamole:latest",
+          container_name: "guacamole",
+          restart: "always",
+          networks: ["guacnetwork_compose"],
+          ports: ["8080:8080"],
+          environment: {
+            GUACAMOLE_HOME: "/guacamole_home",
+            MYSQL_HOSTNAME: "postgres",
+            MYSQL_PORT: 3306,
+            MYSQL_DATABASE: "guacamole_db",
+            MYSQL_USER: "guacamole_user",
+            MYSQL_PASSWORD: "guacamole_password",
+          },
+        },
+
       }
     };
   
