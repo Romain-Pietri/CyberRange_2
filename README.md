@@ -19,5 +19,30 @@
 ## ⚙️ Installation & Mise
 
 ### Cloner le dépot
-git clone https://github.com/Romain-Pietri/CyberRange_2.git
-cd CyberRange_2
+``git clone https://github.com/Romain-Pietri/CyberRange_2.git``
+
+``cd CyberRange_2```
+
+### Installer docker et docker compose
+
+# Docker
+``sudo systemctl enable docker``
+
+``sudo usermod -aG docker $USER``
+
+# Docker Compose
+``sudo apt install docker-compose -y``
+
+### Deploiement du front
+
+``cd Web\frontend``
+
+``npm install``
+
+``npm start``
+
+### Deploiement du back
+
+``cd Web\backend\src``
+
+``node index.js``
