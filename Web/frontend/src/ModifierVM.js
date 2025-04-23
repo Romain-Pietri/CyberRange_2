@@ -320,6 +320,7 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
           <input
             type="number"
             min="0"
+            max="9"
             value={nbAttack}
             onChange={(e) => {
               setNbAttack(e.target.value);
@@ -334,6 +335,7 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
           <input
             type="number"
             min="0"
+            max="9"
             value={nbDefense}
             onChange={(e) => setNbDefense(e.target.value)}
           />
