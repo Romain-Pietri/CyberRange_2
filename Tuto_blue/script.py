@@ -139,4 +139,4 @@ conn.close()
 
 print("[+] Guacamole configuré avec succès ! Accès : http://localhost:8080/guacamole")
 
-print("[+] Scénario tutoriel kali red Prêt !")
+print("[+] Scénario tutoriel kali blue Prêt !")
