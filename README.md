@@ -75,6 +75,33 @@ Mot de passe : password
 ![Nom Scénario](Readme/img/Ajouter-nom.png)
 ![Succès Ajout](Readme/img/ajout%20succés.png)
 
+### Modifier Scénarios
 
+- **Choix Nombre attaquant et défenseurs**
+- **SIEM ou non**
+- **Possibilité de rajouter des machines / réseaux ou readme**
+
+![Modifier Scénario](readme/img/modifier.png)
+
+# Configuration Réseau
+
+- **Nom du réseau**
+- **Masque de sous-réseau**
+
+![Modifier Scénario 1](readme/img/modifier1.png)
+
+# Configuration Machines 
+
+- **Nom de la machine**
+- **Choix de l'OS**
+- **Identifiant et Mot de passe**
+- **Possibiité d'ouvrir des ports**
+- **Affilié la machine à un réseau**
+
+![Modifier Scénario 2](readme/img/modifier2.png)
+
+# ReadMe
+
+![Modifier Scénario 3](readme/img/modifier3.png)
 
 
