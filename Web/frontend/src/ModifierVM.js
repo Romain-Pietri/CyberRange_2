@@ -107,10 +107,6 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
       NbBlue: nbDefense,
       BoolSiem: siem,
       dockerComposeJson: {
-        services: {
-          service1: { image: "nginx" },
-          service2: { image: "redis" }
-        },
         volumes: {
           volume1: {}
         }
