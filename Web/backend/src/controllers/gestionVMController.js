@@ -68,6 +68,7 @@ exports.startScenario = (req, res) => {
 
   const scenariosDir = path.join(__dirname, '../../../../');
   const scenarioDir = path.join(scenariosDir, scenario);
+  const isRunningFilePath = path.join(scenarioDir, 'isrunning');
 
   // Exécuter le script de démarrage du scénario
   const startScriptPath = path.join(scenarioDir, 'script.py');
@@ -95,29 +96,14 @@ exports.startScenario = (req, res) => {
 
     // Traitez stdout normalement
     console.log(`Sortie standard (stdout) : ${stdout}`);
+    fs.writeFileSync(isRunningFilePath, '1', 'utf-8');
     return res.status(200).json({
         message: 'Scénario exécuté avec succès.',
         stdout,
         stderr,
     });
 });
-    const isRunningFilePath = path.join(scenarioDir, 'isrunning');
-    console.log('isRunningFilePath', isRunningFilePath);
-    // Vérifier si le fichier isrunning existe
-    if (!fs.existsSync(isRunningFilePath)) {
-        return res.status(404).json({ message: 'Fichier "isrunning" non trouvé.' });
-    }
     
-    // Vérifier si le scénario est déjà en cours d'exécution
-    const content = fs.readFileSync(isRunningFilePath, 'utf-8').trim();
-    if (content === '1') {
-        return res.status(400).json({ message: 'Le scénario est déjà en cours d\'exécution.' });
-    }
-    
-    // Mettre à jour le fichier isrunning pour indiquer que le scénario est en cours d'exécution
-    fs.writeFileSync(isRunningFilePath, '1', 'utf-8');
-    console.log(`Scénario "${scenario}" démarré avec succès.`);
-    res.json({ message: `Scénario "${scenario}" démarré avec succès.` });
 };
 
 // Arrêter un scénario
