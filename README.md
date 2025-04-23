@@ -52,6 +52,29 @@
 
 ### Connexion
 
+Identifiant : admin
+
+Mot de passe : password
+
 ![Connexion](Readme/img/connexion.png)
+
+### Page d'acceuil
+
+![Accueil](Readme/img/accueil.png)
+
+### Gestion des Machines Virtuelles
+
+![Gestion VM](Readme/img/Gestion.png)
+
+### Supprimer Scénarios
+
+![Supprimer Scénario](Readme/img/supprimer.png)
+
+### Ajouter Scénarios
+
+![Nom Scénario](Readme/img/Ajouter-nom.png)
+![Succès Ajout](Readme/img/ajout%20succés.png)
+
+
 
 
