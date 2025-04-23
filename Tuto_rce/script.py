@@ -98,6 +98,7 @@ for attempt in range(MAX_RETRIES):
         print("[+] Connexion à PostgreSQL réussie !")
         break
     except Exception as e:
+        print(f"Erreur lors de la connexion à PostgreSQL : {e}")
         print(f"[+] PostgreSQL non prêt, essai {attempt+1}/{MAX_RETRIES}. Attente 5s...")
         time.sleep(5)
 else:
