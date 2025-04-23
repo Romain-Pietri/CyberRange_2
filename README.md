@@ -16,7 +16,7 @@
 - **node**
 ---
 
-## ⚙️ Installation & Mise
+## ⚙️ Installation
 
 ### Cloner le dépot
 ``git clone https://github.com/Romain-Pietri/CyberRange_2.git``
