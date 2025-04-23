@@ -164,7 +164,8 @@ exports.updateScenario = (req, res) => {
      //if (!scenarioName || NbRed === undefined || NbBlue === undefined || BoolSiem === undefined || !dockerComposeJson) {
      //   return res.status(400).json({ message: 'Tous les champs (scenarioName, NbRed, NbBlue, BoolSiem, config_yml) sont requis.' });
     //}
-
+    NbBlue = parseInt(NbBlue);
+    NbRed = parseInt(NbRed);
     console.log("Données reçues :");
     console.log("scenarioName :", scenarioName);
     console.log("NbRed :", NbRed);
@@ -291,7 +292,7 @@ exports.updateScenario = (req, res) => {
         console.error('Erreur lors de l\'écriture du fichier JSON :', error);
         return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier JSON.' });
     }
-            
+
     
 
 
