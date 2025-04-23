@@ -299,7 +299,7 @@ exports.updateScenario = (req, res) => {
     let siemJson={}
     try {
         console.log(__dirname);
-        const siemData = fs.readFileSync(path.join(__dirname, '/controllers/other_model/Siem.yml'), 'utf-8');
+        const siemData = fs.readFileSync(path.join(__dirname, '/other_model/Siem.yml'), 'utf-8');
         siemJson = yaml.parse(siemData);
         console.log("siemJson", siemJson);
     } catch (err) {
