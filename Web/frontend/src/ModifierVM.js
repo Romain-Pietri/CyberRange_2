@@ -60,8 +60,8 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
 
         // Compte les kali_red et kali_blue même si elles sont exclues de l'affichage
         const allServiceNames = Object.keys(services);
-        const nbAttack = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_red")).length ?? 0;
-        const nbDefense = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_blue")).length ?? 0;
+        const nbAttackb = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_red")).length ??0;
+        const nbDefenseb = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_blue")).length ??0;
 
         // Détection de SIEM via la présence de kibana
         const siem = allServiceNames.some(name => name.toLowerCase().includes("kibana"));
@@ -76,8 +76,8 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
 
         setMachines(machinesFormatted);
         setNetworks(networksFormatted);
-        setNbAttack(nbAttack);
-        setNbDefense(nbDefense);
+        setNbAttack(nbAttackb);
+        setNbDefense(nbDefenseb);
         setSiem(siem);
       } catch (error) {
         console.error("Erreur lors du traitement du scénario :", error);
@@ -321,7 +321,11 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
             type="number"
             min="0"
             value={nbAttack}
-            onChange={(e) => setNbAttack(e.target.value)}
+            onChange={(e) => {
+              setNbAttack(e.target.value);
+              console.log("Nombre d'attaquants:", e.target.value);
+
+            }}
           />
         </div>
 
