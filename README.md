@@ -112,15 +112,15 @@
 
 ![Modifier Scénario 3](Readme/img/modifier3.png)
 
-## Fonctionnement API
+# Fonctionnement API
 
-# Créer un scénario
+## Créer un scénario
 
 Route : /create-scenario  
 Méthode HTTP : POST  
 Description : Crée un nouveau scénario en créant un répertoire portant le nom spécifié et en initialisant les fichiers nécessaires.
 
-## Format de la requête  
+### Format de la requête  
 Corps (JSON) :
 ```
 {
@@ -128,7 +128,7 @@ Corps (JSON) :
 }
 ```
 
-## Format de la réponse  
+### Format de la réponse  
 Réponse en cas de succès (201 Created) :
 ```
 {
@@ -159,13 +159,13 @@ Réponse en cas d'erreur serveur (500 Internal Server Error) :
 
 ---
 
-# Obtenir les scénarios
+## Obtenir les scénarios
 
 Route : /get-scenario  
 Méthode HTTP : POST  
 Description : Récupère les informations d'un scénario, y compris le contenu du fichier docker-compose.yml et les fichiers associés.
 
-## Format de la requête  
+### Format de la requête  
 Corps (JSON) :
 ```
 {
@@ -173,7 +173,7 @@ Corps (JSON) :
 }
 ```
 
-## Format de la réponse  
+### Format de la réponse  
 Réponse en cas de succès (200 OK) :
 ```
 {
@@ -213,13 +213,13 @@ Réponse en cas de fichier docker-compose.yml introuvable (404 Not Found) :
 
 ---
 
-# Mettre à jour un scénario
+## Mettre à jour un scénario
 
 Route : /update  
 Méthode HTTP : POST  
 Description : Met à jour un scénario existant en modifiant le fichier docker-compose.yml et en gérant les fichiers associés.
 
-## Format de la requête  
+### Format de la requête  
 Corps (JSON) :
 ```
 {
@@ -239,7 +239,7 @@ Corps (JSON) :
 }
 ```
 
-## Format de la réponse  
+### Format de la réponse  
 Réponse en cas de succès (200 OK) :
 ```
 {
@@ -263,13 +263,13 @@ Réponse en cas d'erreur serveur (500 Internal Server Error) :
 
 ---
 
-# Uploader un fichier
+## Uploader un fichier
 
 Route : /upload-file  
 Méthode HTTP : POST  
 Description : Crée ou met à jour un fichier dans un scénario, en créant les répertoires nécessaires si besoin.
 
-## Format de la requête  
+### Format de la requête  
 Corps (JSON) :
 ```
 {
@@ -280,7 +280,7 @@ Corps (JSON) :
 }
 ```
 
-## Format de la réponse  
+### Format de la réponse  
 Réponse en cas de succès (200 OK) :
 ```
 {
