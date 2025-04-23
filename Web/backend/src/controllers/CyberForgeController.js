@@ -284,6 +284,7 @@ exports.updateScenario = (req, res) => {
     };
 
     //Ecrit le fichier vm_connections.json 
+    console.log("tempJson", tempJson);
     const vmConnectionsPath = path.join(scenarioPath, 'vm_connections.json');
     try {
         fs.writeFileSync(vmConnectionsPath, JSON.stringify(tempJson, null, 2), 'utf-8');

@@ -68,7 +68,7 @@ exports.startScenario = (req, res) => {
 
   const scenariosDir = path.join(__dirname, '../../../../');
   const scenarioDir = path.join(scenariosDir, scenario);
-  const isRunningFilePath = path.join(scenarioDir, 'isrunning');
+    const isRunningFilePath = path.join(scenarioDir, 'isrunning');
 
   // Exécuter le script de démarrage du scénario
   const startScriptPath = path.join(scenarioDir, 'script.py');

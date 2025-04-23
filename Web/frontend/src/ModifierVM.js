@@ -60,8 +60,8 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
 
         // Compte les kali_red et kali_blue même si elles sont exclues de l'affichage
         const allServiceNames = Object.keys(services);
-        const nbAttack = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_red")).length;
-        const nbDefense = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_blue")).length;
+        const nbAttack = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_red")).length ?? 0;
+        const nbDefense = allServiceNames.filter(name => name.toLowerCase().startsWith("kali_blue")).length ?? 0;
 
         // Détection de SIEM via la présence de kibana
         const siem = allServiceNames.some(name => name.toLowerCase().includes("kibana"));
