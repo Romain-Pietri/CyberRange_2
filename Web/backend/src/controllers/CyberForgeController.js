@@ -267,6 +267,7 @@ exports.updateScenario = (req, res) => {
     tempJson=[];
     
     for (let i = 1; i <= NbRed; i++) {
+        console.log("i", i, "NbBlue", NbBlue, 3389+i+NbBlue);
         tempJson.push({
             "name": `Kali Red ${i}`,
             "hostname": `$`,
