@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Kali Blue 1",
+    "hostname": "$",
+    "port": "3389",
+    "protocol": "rdp",
+    "username": "kaliuser",
+    "password": "kali"
+  },
+  {
+    "name": "Kali Blue 2",
+    "hostname": "$",
+    "port": "3390",
+    "protocol": "rdp",
+    "username": "kaliuser",
+    "password": "kali"
+  },
+  {
+    "name": "Kali Blue 3",
+    "hostname": "$",
+    "port": "3391",
+    "protocol": "rdp",
+    "username": "kaliuser",
+    "password": "kali"
+  }
+]

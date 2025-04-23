@@ -1,0 +1,9 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/auth.log # Fichier de logs SSH
+      - /var/log/syslog   # Autres logs système si nécessaire
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]

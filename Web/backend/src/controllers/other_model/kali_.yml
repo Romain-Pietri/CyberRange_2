@@ -1,0 +1,10 @@
+kali_:
+      build:
+        context: .
+        dockerfile: 
+      ports:
+        - "3389:3389"
+      privileged: true 
+      networks:
+        - guacnetwork_compose
+        - vulnerable_network

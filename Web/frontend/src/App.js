@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Menu from './Menu';
+import GestionVM from './GestionVM';
+import SupprimerVM from './SupprimerVM';
+import ModifierVM from './ModifierVM';
+import ChoixScenario from './ChoixScenario';
+import CyberForge from './CyberForge';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,13 +20,23 @@ const App = () => {
     };
 
     return (
-        <div>
-            {isAuthenticated ? (
-                <Menu onLogout={handleLogout} />
-            ) : (
-                <Login onLogin={handleLogin} />
-            )}
-        </div>
+        <Router>
+            <Routes>
+                {!isAuthenticated ? (
+                    <Route path="*" element={<Login onLogin={handleLogin} />} />
+                ) : (
+                    <>
+                        <Route path="/" element={<Menu onLogout={handleLogout} />} />
+                        <Route path="/gestion-vm" element={<GestionVM />} />
+                        <Route path="/supprimer-vm" element={<SupprimerVM />} />
+                        <Route path="/modifier-vm" element={<ModifierVM />} />
+                        <Route path="/choix-scenario" element={<ChoixScenario />} />
+                        <Route path="/cyberForge" element={<CyberForge />} />
+                        {/* Ajoutez d'autres routes ici si nécessaire */}
+                    </>
+                )}
+            </Routes>
+        </Router>
     );
 };
 
