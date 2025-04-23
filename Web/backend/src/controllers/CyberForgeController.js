@@ -318,9 +318,13 @@ exports.updateScenario = (req, res) => {
         // Ajoute les services de siemJson.services au dockerComposeJson.services
         console.log("siemJson.services", siemJson.services);
         Object.entries(siemJson.services).forEach(([key, value]) => {
-            if (!dockerComposeJson.services[key]) {
-                dockerComposeJson.services[key] = value;
-            }
+                if (!dockerComposeJson.services) {
+                    dockerComposeJson.services = {};
+                }
+                if (!dockerComposeJson.services[key]) {
+                    dockerComposeJson.services[key] = value;
+                }
+            
         });
         // Vérifie si dockerComposeJson.volumes existe, sinon l'initialise
         if (!dockerComposeJson.volumes) {
