@@ -96,7 +96,6 @@ exports.startScenario = (req, res) => {
 
     // Traitez stdout normalement
     console.log(`Sortie standard (stdout) : ${stdout}`);
-    fs.writeFileSync(isRunningFilePath, '0', 'utf-8');
     return res.status(200).json({
         message: 'Scénario exécuté avec succès.',
         stdout,
@@ -104,7 +103,7 @@ exports.startScenario = (req, res) => {
     });
 });
     const isRunningFilePath = path.join(scenarioDir, 'isrunning');
-    
+    console.log('isRunningFilePath', isRunningFilePath);
     // Vérifier si le fichier isrunning existe
     if (!fs.existsSync(isRunningFilePath)) {
         return res.status(404).json({ message: 'Fichier "isrunning" non trouvé.' });
