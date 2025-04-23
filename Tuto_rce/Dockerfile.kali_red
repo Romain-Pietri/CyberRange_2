@@ -38,7 +38,7 @@ RUN apt update && apt full-upgrade -y && \
         foremost \
         theharvester \
         spiderfoot \
-        maltego \
+        maltego \   
         logwatch \
         goaccess \
         ansible \
