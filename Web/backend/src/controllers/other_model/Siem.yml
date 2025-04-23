@@ -1,41 +1,40 @@
-services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    networks:
-      - labnet
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+  container_name: elasticsearch
+  environment:
+    - discovery.type=single-node
+    - xpack.security.enabled=false
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  networks:
+    - labnet
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.10.2
-    container_name: kibana
-    depends_on:
-      - elasticsearch
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    networks:
-      labnet:
-        ipv4_address: 192.168.1.100 # Adresse IP statique
+kibana:
+  image: docker.elastic.co/kibana/kibana:8.10.2
+  container_name: kibana
+  depends_on:
+    - elasticsearch
+  environment:
+    - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  ports:
+    - "5601:5601"
+  networks:
+    labnet:
+      ipv4_address: 192.168.1.100 # Adresse IP statique
 
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.10.2
-    container_name: filebeat
-    user: root
-    command: ["--strict.perms=false"]
-    volumes:
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ssh_logs:/var/log # Accès aux logs partagés
-    depends_on:
-      - elasticsearch
-    networks:
-      - labnet
+filebeat:
+  image: docker.elastic.co/beats/filebeat:8.10.2
+  container_name: filebeat
+  user: root
+  command: ["--strict.perms=false"]
+  volumes:
+    - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    - ssh_logs:/var/log # Accès aux logs partagés
+  depends_on:
+    - elasticsearch
+  networks:
+    - labnet
 
 
 volumes:
