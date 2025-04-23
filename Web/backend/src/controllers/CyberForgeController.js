@@ -268,11 +268,11 @@ exports.updateScenario = (req, res) => {
     const baseport=3389+NbBlue;
     for (let i = 1; i <= NbRed; i++) {
         
-        console.log("i", i, "NbBlue", NbBlue, 3389+i+NbBlue);
+        console.log("i", i, "NbBlue", NbBlue, "baseport", baseport, "port", baseport + (i-1));
         tempJson.push({
             "name": `Kali Red ${i}`,
             "hostname": `$`,
-            "port": `${basePort + (i-1) }`,
+            "port": `${baseport + (i-1) }`,
             "protocol": "rdp",
             "username": "kaliuser",
             "password": "kali"
