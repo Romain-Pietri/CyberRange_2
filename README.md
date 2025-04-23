@@ -9,7 +9,7 @@
 ## Prérequis
 
 ### Logiciels
-- **Système hôte :** Linux (Ubuntu/Debian recommandé)
+- **Système hôte :** Linux
 - **Docker**
 - **Python**
 - **pip**
@@ -25,15 +25,15 @@
 
 ### Installer docker et docker compose
 
-# Docker
+#### Docker
 ``sudo systemctl enable docker``
 
 ``sudo usermod -aG docker $USER``
 
-# Docker Compose
+#### Docker Compose
 ``sudo apt install docker-compose -y``
 
-### Deploiement du front
+#### Deploiement du front
 
 ``cd Web\frontend``
 
@@ -41,8 +41,9 @@
 
 ``npm start``
 
-### Deploiement du back
+#### Deploiement du back
 
 ``cd Web\backend\src``
 
 ``node index.js``
+
