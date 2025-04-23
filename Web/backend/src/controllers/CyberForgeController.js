@@ -158,7 +158,7 @@ exports.get_scenarios = (req, res) => {
 };
 
 exports.updateScenario = (req, res) => {
-    const { scenarioName, NbRedt, NbBluet, BoolSiem,dockerComposeJson} = req.body;
+    const { scenarioName, NbRed, NbBlue, BoolSiem,dockerComposeJson} = req.body;
     
      // Vérification des champs requis
      //if (!scenarioName || NbRed === undefined || NbBlue === undefined || BoolSiem === undefined || !dockerComposeJson) {
@@ -166,8 +166,6 @@ exports.updateScenario = (req, res) => {
     //}
     //Si NbRed ou NbBlue est vide, on le met à 0
     //si NbRed ou Nbblue est superieur à 9, on le met à 9
-    let NbRed = (NbRedt === undefined || NbRedt === '') ? 0 : (NbRedt > 9 ? 9 : NbRedt);
-    let NbBlue = (NbBluet === undefined || NbBluet === '') ? 0 : (NbBluet > 9 ? 9 : NbBluet);
     
 
     console.log("Données reçues :");
