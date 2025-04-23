@@ -52,9 +52,9 @@
 
 ### Connexion
 
-Identifiant : admin
+- **Identifiant** : admin
 
-Mot de passe : password
+- **Mot de Passe** : password
 
 ![Connexion](Readme/img/connexion.png)
 
@@ -65,6 +65,14 @@ Mot de passe : password
 ### Gestion des Machines Virtuelles
 
 ![Gestion VM](Readme/img/Gestion.png)
+
+### Lancer un scénario (Exemple Tuto_rce)
+
+- **Identifiant** : Guacadmin 
+- **Mot de Passe** : Guacadmin 
+![Connexion](Readme/img/guacadmin.png)
+![Lancer](Readme/img/guacamole.png)
+![Machine](Readme/img/Machine.png)
 
 ### Supprimer Scénarios
 
@@ -103,5 +111,4 @@ Mot de passe : password
 # Configuration ReadMe
 
 ![Modifier Scénario 3](Readme/img/modifier3.png)
-
 
