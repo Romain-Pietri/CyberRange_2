@@ -158,14 +158,14 @@ exports.get_scenarios = (req, res) => {
 };
 
 exports.updateScenario = (req, res) => {
-    const { scenarioName, NbRed, NbBlue, BoolSiem,dockerComposeJson} = req.body;
+    const { scenarioName, NbRedT, NbBlueT, BoolSiem,dockerComposeJson} = req.body;
     
      // Vérification des champs requis
      //if (!scenarioName || NbRed === undefined || NbBlue === undefined || BoolSiem === undefined || !dockerComposeJson) {
      //   return res.status(400).json({ message: 'Tous les champs (scenarioName, NbRed, NbBlue, BoolSiem, config_yml) sont requis.' });
     //}
-    NbBlue = parseInt(NbBlue);
-    NbRed = parseInt(NbRed);
+    NbBlue = parseInt(NbBlueT);
+    NbRed = parseInt(NbRedT);
     console.log("Données reçues :");
     console.log("scenarioName :", scenarioName);
     console.log("NbRed :", NbRed);
