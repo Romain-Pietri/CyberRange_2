@@ -60,6 +60,7 @@ const GestionVM = () => {
             if (response.ok) {
                 setRunningScenarios((prev) => ({ ...prev, [scenario]: 1 }));
                 alert(data.message);
+                window.open('http://10.224.0.53:8080/guacamole/#/', '_blank');
             } else {
                 setError(data.message || 'Erreur lors du démarrage du scénario.');
             }
