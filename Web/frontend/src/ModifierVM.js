@@ -110,6 +110,16 @@ const [showReadmeEditor, setShowReadmeEditor] = useState(false);
         volumes: {
           volume1: {}
         }
+        ,
+        networks:{
+          guacnetwork_compose: {
+            driver: "bridge",
+          }
+          ,
+          vulnerable_network: {
+            driver: "bridge",
+          }
+        }
       }
     };
   

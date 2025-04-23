@@ -241,10 +241,10 @@ exports.updateScenario = (req, res) => {
                 container_name: `kali_red_${i}`,
                 ports: [`${3389 + i+NbBlue}:3389`],
                 privileged: true,
-                networks: {
-                    guacnetwork_compose: {},
-                    vulnerable_network: {}
-                }
+                networks: [
+                    "guacnetwork_compose",
+                    "vulnerable_network"
+                ]
 
             };
         }

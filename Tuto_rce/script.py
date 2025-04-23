@@ -70,7 +70,7 @@ DB_CONFIG = {
     "user": "guacamole_user",
     "password": "ChooseYourOwnPasswordHere1234",
     "database": "guacamole_db",
-    "host": "localhost",
+    "host": TRUE_IP,
     "port": 5432
 }
 
