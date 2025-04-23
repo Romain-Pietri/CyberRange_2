@@ -366,7 +366,7 @@ exports.updateScenario = (req, res) => {
     
     // Mettre à jour le fichier docker-compose.yml
     console.log("dockerComposeJson", dockerComposeJson);
-    const dockerComposePath = path.join(scenarioPath, 'docker-compose2.yml');
+    const dockerComposePath = path.join(scenarioPath, 'docker-compose.yml');
     try {
         const yamlString = yaml.stringify(dockerComposeJson, { indent: 4 });
         fs.writeFileSync(dockerComposePath, yamlString, 'utf-8');
