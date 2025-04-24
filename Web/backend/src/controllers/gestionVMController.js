@@ -12,7 +12,8 @@ function listScenarios(){
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)
     .filter((name) => name !== 'Web') // Exclure le dossier Web
-    .filter((name) => name !== '.git'); // Exclure le dossier .git
+    .filter((name) => name !== '.git') // Exclure le dossier .git
+    .filter((name)=> name !='Readme');
 
   console.log(scenarios);
  
