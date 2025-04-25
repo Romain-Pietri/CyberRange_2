@@ -1,227 +1,286 @@
-# Fiche Technique – CyberRange_2
+
+# Fiche Technique – CyberRange
 
 ## 🔖 Informations Générales
 
-- **Nom du projet :** CyberRange_2  
-- **Description :** Plateforme de simulation pour entraînement à la cybersécurité, basée sur docker compose. Elle permet le déploiement automatisé de machines virtuelles vulnérables pour des scénarios prédéfinis
+- **Nom du projet :** CyberRange  
+- **Description :** Plateforme de simulation dédiée à l’entraînement à la cybersécurité, basée sur Docker Compose. Elle permet le déploiement automatisé de machines virtuelles vulnérables dans le cadre de scénarios prédéfinis.
+
 ---
 
-## Prérequis
+## 🧰 Prérequis
 
-### Logiciels
-- **Système hôte :** Linux
-- **Docker**
-- **Python**
-- **pip**
-- **node**
+### Logiciels requis
+
+- **Système d’exploitation hôte :** Linux  
+- **Docker**  
+- **Docker Compose**  
+- **Python**  
+- **pip**  
+- **Node.js**
+
 ---
 
 ## ⚙️ Installation
 
-### Cloner le dépot
-``git clone https://github.com/Romain-Pietri/CyberRange_2.git``
+### 1. Clonage du dépôt
 
-``cd CyberRange_2``
+```bash
+git clone https://github.com/Romain-Pietri/CyberRange_2.git
+cd CyberRange_2
+```
 
-### Installer docker et docker compose
+### 2. Installation de Docker et Docker Compose
 
 #### Docker
-``sudo systemctl enable docker``
+```bash
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+```
 
-``sudo usermod -aG docker $USER``
+> Redémarrer la session pour appliquer les modifications de groupe.
 
 #### Docker Compose
-``sudo apt install docker-compose -y``
+```bash
+sudo apt install docker-compose -y
+```
 
-#### Deploiement du front
+---
 
-``cd Web\frontend``
+## 🗂 Structure du projet
 
-``npm install``
+```bash
+CyberRange_2
+├── Web
+│   ├── backend
+│   │   ├── src
+│   │   │   ├── controllers
+│   │   │   ├── models
+│   │   │   ├── routes
+│   │   │   ├── utils
+│   │   │   └── index.js
+│   │   ├── package.json
+│   │   └── package-lock.json
+│   └── frontend
+│       ├── public
+│       ├── src
+│       ├── package.json
+│       └── package-lock.json
+├── Scénario_Exemple
+│   ├── docker-compose.yml
+│   ├── README.md
+│   ├── script.py
+│   ├── Dockerfile
+│   ├── Dockerfile2
+│   ├── Data
+│   ├── Isrunning
+│   ├── down.py
+│   ├── vm_connections.json
+│   └── README.md
+└── README.md
+```
 
-``npm start``
+---
 
-#### Deploiement du back
+## 🚀 Déploiement
 
-``cd Web\backend\src``
+### Lancement du frontend
 
-``node index.js``
+```bash
+cd Web/frontend
+npm install
+npm start
+```
 
+### Lancement du backend
 
-## 🛡️​ ​Utilisation 🏹
+```bash
+cd Web/backend
+node src/index.js
+```
 
-### Connexion
+---
 
-- **Identifiant** : admin
+## 🛡️ Utilisation
 
-- **Mot de Passe** : password
+### Connexion à l’interface
+
+- **Identifiant :** `admin`  
+- **Mot de passe :** `password`
 
 ![Connexion](Readme/img/connexion.png)
 
-### Page d'acceuil
+---
+
+### Interface d’accueil
 
 ![Accueil](Readme/img/accueil.png)
 
-### Gestion des Machines Virtuelles
+---
+
+### Gestion des machines virtuelles
 
 ![Gestion VM](Readme/img/Gestion.png)
 
-### Lancer un scénario (Exemple Tuto_rce)
+---
 
-- **Identifiant** : Guacadmin 
-- **Mot de Passe** : Guacadmin 
-![Connexion](Readme/img/guacadmin.png)
-![Lancer](Readme/img/guacamole.png)
-![Machine](Readme/img/Machine.png)
-
-### Supprimer Scénarios
-
-![Supprimer Scénario](Readme/img/supprimer.png)
-
-### Ajouter Scénarios
-
-![Nom Scénario](Readme/img/Ajouter-nom.png)
-![Succès Ajout](Readme/img/ajout%20succés.png)
-
-### Modifier Scénarios
-
-- **Choix Nombre attaquant et défenseurs**
-- **SIEM ou non**
-- **Possibilité de rajouter des machines / réseaux ou readme**
-
-![Modifier Scénario](Readme/img/modifier.png)
-
-# Configuration Réseau
-
-- **Nom du réseau**
-- **Masque de sous-réseau**
-
-![Modifier Scénario 1](Readme/img/modifier1.png)
-
-# Configuration Machines 
-
-- **Nom de la machine**
-- **Choix de l'OS**
-- **Identifiant et Mot de passe**
-- **Possibiité d'ouvrir des ports**
-- **Affilié la machine à un réseau**
-
-![Modifier Scénario 2](Readme/img/modifier2.png)
-
-# Configuration ReadMe
-
-![Modifier Scénario 3](Readme/img/modifier3.png)
-
-# Fonctionnement API
-
-## Créer un scénario
-
-Route : /create-scenario  
-Méthode HTTP : POST  
-Description : Crée un nouveau scénario en créant un répertoire portant le nom spécifié et en initialisant les fichiers nécessaires.
-
-### Format de la requête  
-Corps (JSON) :
-```
-{
-  "scenarioName": "exampleScenario"
-}
-```
-
-### Format de la réponse  
-Réponse en cas de succès (201 Created) :
-```
-{
-  "message": "Scénario créé avec succès."
-}
-```
-
-Réponse en cas d'erreur (400 Bad Request) :
-```
-{
-  "message": "Tous les champs sont requis."
-}
-```
-
-Réponse en cas de conflit (400 Bad Request) :
-```
-{
-  "message": "Le scénario existe déjà."
-}
-```
-
-Réponse en cas d'erreur serveur (500 Internal Server Error) :
-```
-{
-  "message": "Erreur lors de la création du scénario."
-}
-```
+### Lancement d’un scénario (exemple : `Tuto_rce`)
 
 ---
 
-## Obtenir les scénarios
+## ⚙️ Fonctionnement Technique
 
-Route : /get-scenario  
-Méthode HTTP : POST  
-Description : Récupère les informations d'un scénario, y compris le contenu du fichier docker-compose.yml et les fichiers associés.
+Le lancement d’un scénario repose sur une chaîne automatisée pilotée par une API :
 
-### Format de la requête  
-Corps (JSON) :
-```
-{
-  "scenarioName": "exampleScenario"
-}
-```
-
-### Format de la réponse  
-Réponse en cas de succès (200 OK) :
-```
-{
-  "dockerComposeJson": {
-    "services": {
-      "service1": { "image": "nginx" },
-      "service2": { "image": "redis" }
-    },
-    "volumes": {
-      "volume1": {}
-    }
-  },
-  "filesJson": [
-    {
-      "name": "exampleFile.txt",
-      "path": "subdir/exampleFile.txt",
-      "content": "Contenu du fichier"
-    }
-  ],
-  "scenarioName": "exampleScenario"
-}
-```
-
-Réponse en cas de scénario introuvable (404 Not Found) :
-```
-{
-  "message": "Le scénario n'existe pas."
-}
-```
-
-Réponse en cas de fichier docker-compose.yml introuvable (404 Not Found) :
-```
-{
-  "message": "Le fichier docker-compose.yml n'existe pas."
-}
-```
+- L’API **`/start`** est appelée pour initier le scénario.
+- Cette action déclenche le fichier **`script.py`** du scénario.
+- Ce script :
+  - **build** et **lance** les services définis dans le fichier **`docker-compose.yml`**,
+  - se connecte à la **base de données** pour y enregistrer les machines déployées, accessibles ensuite via **Guacamole** (interface web d’accès distant).
 
 ---
 
-## Mettre à jour un scénario
+## 🌐 Connexion à Guacamole
 
-Route : /update  
-Méthode HTTP : POST  
-Description : Met à jour un scénario existant en modifiant le fichier docker-compose.yml et en gérant les fichiers associés.
+- **Identifiant :** `Guacadmin`  
+- **Mot de passe :** `Guacadmin`
 
-### Format de la requête  
-Corps (JSON) :
+![Connexion Guac](Readme/img/guacadmin.png)  
+![Sélection du scénario](Readme/img/guacamole.png)  
+![Démarrage de la machine](Readme/img/Machine.png)
+
+---
+
+### Suppression d’un scénario
+
+![Suppression](Readme/img/supprimer.png)
+
+- **Route :** `/delete`  
+- Supprime le dossier du scénario.
+
+---
+
+### Ajout d’un scénario
+
+![Ajout - Nom](Readme/img/Ajouter-nom.png)  
+![Ajout - Succès](Readme/img/ajout%20succés.png)
+
+#### Technique
+
+- **Route :** `/create-scenario`  
+- Copie les fichiers contenus dans `/controllers/model` dans le nouveau dossier du scénario.
+
+---
+
+### Modification d’un scénario
+
+- Définition du nombre d’**attaquants** et de **défenseurs**  
+- Activation du **SIEM** (optionnelle)  
+- Ajout de **machines**, **réseaux** ou documentation **README**
+
+![Modifier](Readme/img/modifier.png)
+
+---
+
+## 🧩 Configuration réseau
+
+- **Nom du réseau**  
+- **Masque de sous-réseau** (ex : `192.168.1.0/24`)
+
+![Réseau](Readme/img/modifier1.png)
+
+---
+
+## 🖥️ Configuration des machines
+
+- **Nom de la machine**  
+- **Système d’exploitation**  
+- **Identifiants (login / mot de passe)**  
+- **Ouverture de ports**  
+- **Association à un réseau**
+
+![Machines](Readme/img/modifier2.png)
+
+---
+
+## 📘 Ajout de documentation (README)
+
+![README](Readme/img/modifier3.png)
+
+---
+
+## ⚙️ Fonctionnement Technique de l’interface
+
+### Ajout de machines (attaquantes ou défensives)
+
+- Ajoute la machine dans le `docker-compose.yml` du scénario.
+- Enregistre la machine dans `vm_connections.json`.
+- Incrémente les ports pour éviter les conflits.
+
+### Ajout de réseaux
+
+- Ajoute le réseau dans le fichier `docker-compose.yml`.
+
+---
+
+## ⚠️ Limitations connues
+
+- Le nombre de machines virtuelles est limité à **10** par scénario.  
+- Les machines **Windows** ne sont pas encore prises en charge.  
+- Le **serveur hôte ne peut pas être sous Windows** (incompatibilités liées aux chemins de fichiers et à la récupération des adresses IP).  
+- Les **noms de machines contenant des espaces** ne sont pas supportés.
+
+---
+
+## 🔌 Fonctionnement de l’API
+
+### Création d’un scénario
+
+- **Route :** `/create-scenario`  
+- **Méthode :** POST  
+- **Description :** Crée un nouveau scénario avec les fichiers nécessaires.
+
+#### Requête (JSON)
+```json
+{
+  "scenarioName": "exampleScenario"
+}
 ```
+
+#### Réponses possibles
+- ✅ 201 : Scénario créé  
+- ❌ 400 : Champs manquants ou scénario déjà existant  
+- ❌ 500 : Erreur serveur
+
+---
+
+### Récupération d’un scénario
+
+- **Route :** `/get-scenario`  
+- **Méthode :** POST  
+- **Description :** Récupère les fichiers d’un scénario existant.
+
+#### Requête (JSON)
+```json
+{
+  "scenarioName": "exampleScenario"
+}
+```
+
+#### Réponses possibles
+- ✅ 200 : Contenu retourné  
+- ❌ 404 : Scénario ou fichier introuvable
+
+---
+
+### Mise à jour d’un scénario
+
+- **Route :** `/update`  
+- **Méthode :** POST  
+- **Description :** Met à jour les informations d’un scénario existant.
+
+#### Requête (JSON)
+```json
 {
   "scenarioName": "exampleScenario",
   "NbRed": 2,
@@ -239,39 +298,21 @@ Corps (JSON) :
 }
 ```
 
-### Format de la réponse  
-Réponse en cas de succès (200 OK) :
-```
-{
-  "message": "Scénario mis à jour avec succès."
-}
-```
-
-Réponse en cas de scénario introuvable (404 Not Found) :
-```
-{
-  "message": "Le scénario n'existe pas."
-}
-```
-
-Réponse en cas d'erreur serveur (500 Internal Server Error) :
-```
-{
-  "message": "Erreur lors de la mise à jour du scénario."
-}
-```
+#### Réponses possibles
+- ✅ 200 : Mise à jour réussie  
+- ❌ 404 : Scénario introuvable  
+- ❌ 500 : Erreur serveur
 
 ---
 
-## Uploader un fichier
+### Upload de fichiers
 
-Route : /upload-file  
-Méthode HTTP : POST  
-Description : Crée ou met à jour un fichier dans un scénario, en créant les répertoires nécessaires si besoin.
+- **Route :** `/upload-file`  
+- **Méthode :** POST  
+- **Description :** Crée ou met à jour un fichier dans un scénario.
 
-### Format de la requête  
-Corps (JSON) :
-```
+#### Requête (JSON)
+```json
 {
   "scenarioName": "exampleScenario",
   "file": "Contenu du fichier à écrire",
@@ -280,26 +321,8 @@ Corps (JSON) :
 }
 ```
 
-### Format de la réponse  
-Réponse en cas de succès (200 OK) :
-```
-{
-  "message": "Fichier créé ou mis à jour avec succès."
-}
-```
-
-Réponse en cas de scénario introuvable (404 Not Found) :
-```
-{
-  "message": "Le scénario spécifié n'existe pas."
-}
-```
-
-Réponse en cas d'erreur serveur (500 Internal Server Error) :
-```
-{
-  "message": "Erreur lors de la création ou de la mise à jour du fichier."
-}
-```
-
+#### Réponses possibles
+- ✅ 200 : Fichier traité  
+- ❌ 404 : Scénario introuvable  
+- ❌ 500 : Erreur serveur
 
