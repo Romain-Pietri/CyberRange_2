@@ -10,6 +10,14 @@
 
 ## 🧰 Prérequis
 
+### Matériel requis
+- **Processeur :** 4 cœurs minimum
+- **Mémoire vive :** 16 Go minimum
+- **Espace disque :** 50 Go minimum
+- **Carte réseau :** 1 carte réseau minimum
+- **Accès Internet :** Requis pour le téléchargement des images Docker
+
+
 ### Logiciels requis
 
 - **Système d’exploitation hôte :** Linux  
