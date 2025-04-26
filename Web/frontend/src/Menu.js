@@ -30,7 +30,7 @@ const Menu = ({ onLogout }) => {
 
         setLoading(true);
         try {
-            const response = await fetch('http://10.224.0.53:3000/api/cyberforge/create-scenario', {
+            const response = await fetch('http://localhost:3000/api/cyberforge/create-scenario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
